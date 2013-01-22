@@ -1,0 +1,18 @@
+{application, cloudstore,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib,
+                  lager,
+                  ranch,
+                  cowboy,
+                  jiffy,
+                  epgsql,
+                  poolboy
+                 ]},
+  {mod, { cloudstore_app, []}},
+  {env, []}
+ ]}.
