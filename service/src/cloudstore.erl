@@ -16,7 +16,7 @@ rest_init(Req, _Opts) ->
     {ok, Req, #state{}}.
 
 malformed_request(Req, State) ->
-    {false, Req0, State}.
+    {false, Req, State}.
 
 allowed_methods(Req, State) ->
     {[<<"GET">>], Req, State}.
@@ -24,5 +24,5 @@ allowed_methods(Req, State) ->
 content_types_provided(Req, State) ->
     {[{<<"application/json">>, read_json}], Req, State}.
 
-read_json(Req, #state{tag = Tag} = State) ->
+read_json(Req, State) ->
     {jiffy:encode({[]}), Req, State}.
