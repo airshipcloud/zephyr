@@ -11,11 +11,11 @@ start_link() ->
 
 rest() ->
     RestDispatch = [{'_', [
-        {[], cloudstore, []}
+        {'_', cloudstore, []}
     ]}],
     RestConfig = [rest_listener, 100,
         [{port, 10001}],
-        [{dispatch, RestDispatch}]],
+        [{env, [{dispatch, RestDispatch}]}]],
     {rest, {cowboy, start_http, RestConfig}, permanent, 5000, supervisor, dynamic}.
 
 init([]) ->
@@ -28,8 +28,8 @@ init([]) ->
         ],
         [
             {hostname, "127.0.0.1"},
-            {database, "cloudstore"},
-            {username, "cloudstore"},
+            {database, "cf_cloudstore"},
+            {username, "cf_cloudstore"},
             {password, "y7DrtF48bc"}
         ]),
     {ok, { {one_for_one, 5, 10}, [Pool, rest()]} }.
