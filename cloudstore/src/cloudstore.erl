@@ -38,8 +38,12 @@ content_types_provided(Req, State) ->
 content_types_accepted(Req, State) ->
     {[{<<"application/json">>, write_json}], Req, State}.
 
-read_json(Req, State) ->
-    {jiffy:encode({[]}), Req, State}.
+read_json(Req, #state{hash = Hash} = State) ->
+    Q = <<"select value from objects where hash=$1">>,
+    case cloudstore_pg:equery(cloudstore_pool, Q, [Hash]) of
+        {ok, _, []} -> {halt, Req, State};
+        {ok, _, [{_Value}]} -> {jiffy:encode({[]}), Req, State}
+    end.
 
 write_json(Req, #state{hash = undefined, path = Path} = State) ->
     Q = <<"insert into objects(hash,version,path,value) values (md5($1),0,''::hstore,''::hstore)">>,
