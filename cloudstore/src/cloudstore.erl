@@ -10,7 +10,7 @@
 -export([read_json/2]).
 -export([write_json/2]).
 
--record(state, {path}).
+-record(state, {path, hash}).
 
 init(_Transport, _Req, _Opts) ->
     {upgrade, protocol, cowboy_rest}.
@@ -19,13 +19,18 @@ rest_init(Req, _Opts) ->
     {ok, Req, #state{}}.
 
 malformed_request(Req, State) ->
-    {false, Req, State}.
+    {Path, Req0} = cowboy_req:path(Req),
+    {false, Req0, State#state{path = Path}}.
 
 allowed_methods(Req, State) ->
     {[<<"GET">>, <<"PUT">>], Req, State}.
 
-resource_exists(Req, State) ->
-    {true, Req, State}.
+resource_exists(Req, #state{path = Path} = State) ->
+    Q = <<"select hash from objects where hash=md5($1)">>,
+    case cloudstore_pg:equery(cloudstore_pool, Q, [Path]) of
+        {ok, _, []} -> {false, Req, State};
+        {ok, _, [{Hash}]} -> {true, Req, State#state{hash = Hash}}
+    end.
 
 content_types_provided(Req, State) ->
     {[{<<"application/json">>, read_json}], Req, State}.
@@ -36,5 +41,9 @@ content_types_accepted(Req, State) ->
 read_json(Req, State) ->
     {jiffy:encode({[]}), Req, State}.
 
-write_json(Req, State) ->
+write_json(Req, #state{hash = undefined, path = Path} = State) ->
+    Q = <<"insert into objects(hash,version,path,value) values (md5($1),0,''::hstore,''::hstore)">>,
+    {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Path]),
+    {true, Req, State};
+write_json(Req, #state{hash = _Hash} = State) ->
     {true, Req, State}.
