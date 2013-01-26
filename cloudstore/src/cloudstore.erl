@@ -10,7 +10,7 @@
 -export([read_json/2]).
 -export([write_json/2]).
 
--record(state, {path, hash}).
+-record(state, {path, segments, hash}).
 
 init(_Transport, _Req, _Opts) ->
     {upgrade, protocol, cowboy_rest}.
@@ -20,7 +20,8 @@ rest_init(Req, _Opts) ->
 
 malformed_request(Req, State) ->
     {Path, Req0} = cowboy_req:path(Req),
-    {false, Req0, State#state{path = Path}}.
+    Segments = [list_to_binary(L)  || L <- string:tokens(binary_to_list(Path), "/")],
+    {false, Req0, State#state{path = Path, segments = Segments}}.
 
 allowed_methods(Req, State) ->
     {[<<"GET">>, <<"PUT">>], Req, State}.
@@ -57,11 +58,14 @@ read_json(Req, #state{hash = Hash} = State) ->
 props_to_hprops(Props) ->
     lists:append([[Name, jiffy:encode(Value)] || {Name, Value} <- Props]).
 
-write_json(Req, #state{hash = undefined, path = Path} = State) ->
+segments_to_hprops(Segments) ->
+    lists:append(lists:foldl(fun(Value, R) -> [[list_to_binary(integer_to_list(length(R))), Value] | R] end, [], Segments)).
+
+write_json(Req, #state{hash = undefined, path = Path, segments = Segments} = State) ->
     {ok, Json, Req0} = cowboy_req:body(Req),
     {Props} = jiffy:decode(Json),
-    Q = <<"insert into objects(hash,version,path,value) values (md5($1),0,''::hstore,hstore($2::text[]))">>,
-    {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Path, props_to_hprops(Props)]),
+    Q = <<"insert into objects(hash,version,path,value) values (md5($1),0,hstore($2::text[]),hstore($3::text[]))">>,
+    {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Path, segments_to_hprops(Segments), props_to_hprops(Props)]),
     {true, Req0, State};
 write_json(Req, #state{hash = Hash} = State) ->
     {ok, Json, Req0} = cowboy_req:body(Req),
