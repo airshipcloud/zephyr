@@ -38,19 +38,30 @@ content_types_provided(Req, State) ->
 content_types_accepted(Req, State) ->
     {[{<<"application/json">>, write_json}], Req, State}.
 
+hprops_to_props(HProps) ->
+    hprops_to_props(HProps, []).
+
+hprops_to_props([], R) -> R;
+hprops_to_props(HProps0, R) ->
+    {[Name, Value], HProps} = lists:split(2, HProps0),
+    hprops_to_props(HProps, [{Name, jiffy:decode(Value)} | R]).
+
 read_json(Req, #state{hash = Hash} = State) ->
     Q = <<"select hstore_to_array(value) from objects where hash=$1">>,
     case cloudstore_pg:equery(cloudstore_pool, Q, [Hash]) of
         {ok, _, []} -> {halt, Req, State};
-        {ok, _, [{_HProps}]} -> {jiffy:encode({[]}), Req, State}
+        {ok, _, [{HProps}]} ->
+            {jiffy:encode({hprops_to_props(HProps)}), Req, State}
     end.
+
+props_to_hprops(Props) ->
+    lists:append([[Name, jiffy:encode(Value)] || {Name, Value} <- Props]).
 
 write_json(Req, #state{hash = undefined, path = Path} = State) ->
     {ok, Json, Req0} = cowboy_req:body(Req),
     {Props} = jiffy:decode(Json),
-    HProps = lists:append([[Name, jiffy:encode(Value)] || {Name, Value} <- Props]),
     Q = <<"insert into objects(hash,version,path,value) values (md5($1),0,''::hstore,hstore($2::text[]))">>,
-    {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Path, HProps]),
+    {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Path, props_to_hprops(Props)]),
     {true, Req0, State};
 write_json(Req, #state{hash = Hash} = State) ->
     {ok, Json, Req0} = cowboy_req:body(Req),
