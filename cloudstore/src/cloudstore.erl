@@ -71,6 +71,6 @@ write_json(Req, #state{hash = Hash} = State) ->
     {ok, Json, Req0} = cowboy_req:body(Req),
     {Props} = jiffy:decode(Json),
     HProps = lists:append([[Name, jiffy:encode(Value)] || {Name, Value} <- Props]),
-    Q = <<"update objects set value=value||hstore($2::text[]) where hash=$1">>,
+    Q = <<"update objects set version=version+1,value=value||hstore($2::text[]) where hash=$1">>,
     {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Hash, HProps]),
     {true, Req0, State}.
