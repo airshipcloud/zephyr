@@ -13,8 +13,9 @@ rest() ->
     RestDispatch = [{'_', [
         {'_', cloudstore, []}
     ]}],
+    {ok, Port} = application:get_env(cloudstore, port),
     RestConfig = [rest_listener, 100,
-        [{port, 10001}],
+        [{port, Port}],
         [{env, [{dispatch, RestDispatch}]}]],
     {rest, {cowboy, start_http, RestConfig}, permanent, 5000, supervisor, dynamic}.
 
@@ -30,7 +31,7 @@ init([]) ->
             {hostname, "127.0.0.1"},
             {database, "cf_cloudstore"},
             {username, "cf_cloudstore"},
-            {password, "y7DrtF48bc"}
+            {password, "dhY8AGhJ3Z"}
         ]),
     {ok, { {one_for_one, 5, 10}, [Pool, rest()]} }.
 

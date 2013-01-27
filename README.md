@@ -18,3 +18,21 @@ With Cloud Fabric, you can easily create apps in HTML and JavaScript without the
 As a philosophy, Cloud Fabric is less of a traditional framework and more of a set of simple service APIs. The services talk to each other on an internal network and expose one external endpoint for communication with apps and other Cloud Fabric servers. Any service can be exchanged or customized without affect to the other services as long as the APIs remain the same.
 
 The code provided in the repository is meant to serve as a fully functional, production ready server. However, any server or component that conforms to the Cloud Fabric API will be linked to from this document.
+
+## INSTALLATION
+
+### Cloudstore
+
+1. Install Erlang R15B03 or greater (we recommend the Erlang Solutions version: https://www.erlang-solutions.com/downloads/download-erlang-otp)
+
+2. Install Postgres 9.1 or greater
+
+3. $ ./apply_config.sh
+
+4. $ make
+
+5. ./cloudstore/rel/cloudstore/bin/cloudstore console
+
+### Configuration
+
+Edit config/base to change cloudstore db password or HTTP port (then rerun ./apply_config.sh && make).
