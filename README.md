@@ -31,7 +31,7 @@ The code provided in the repository is meant to serve as a fully functional, pro
 
 4. $ make
 
-5. ./cloudstore/rel/cloudstore/bin/cloudstore console
+5. $ ./cloudstore/rel/cloudstore/bin/cloudstore console
 
 ### Configuration
 
