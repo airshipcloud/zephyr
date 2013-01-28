@@ -57,6 +57,11 @@ The Cloud Fabric stack is composed of several modular services that talk to each
 
 ## Cloud Store
 
+** Create Postgres Database **
+
+    cd cloudstore/db
+    ./init.sh
+
 Cloud Store provides a RESTful API for storing and retrieving data.
 
 **Start Cloud Store**
