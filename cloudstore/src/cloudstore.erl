@@ -9,6 +9,7 @@
 -export([content_types_accepted/2]).
 -export([read_json/2]).
 -export([write_json/2]).
+-export([delete_resource/2]).
 
 -record(state, {path, segments, hash}).
 
@@ -24,7 +25,7 @@ malformed_request(Req, State) ->
     {false, Req0, State#state{path = Path, segments = Segments}}.
 
 allowed_methods(Req, State) ->
-    {[<<"GET">>, <<"PUT">>], Req, State}.
+    {[<<"GET">>, <<"PUT">>, <<"DELETE">>], Req, State}.
 
 resource_exists(Req, #state{path = Path} = State) ->
     Q = <<"select hash from objects where hash=md5($1)">>,
@@ -67,6 +68,7 @@ write_json(Req, #state{hash = undefined, path = Path, segments = Segments} = Sta
     Q = <<"insert into objects(hash,version,path,value) values (md5($1),0,hstore($2::text[]),hstore($3::text[]))">>,
     {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Path, segments_to_hprops(Segments), props_to_hprops(Props)]),
     {true, Req0, State};
+
 write_json(Req, #state{hash = Hash} = State) ->
     {ok, Json, Req0} = cowboy_req:body(Req),
     {Props} = jiffy:decode(Json),
@@ -74,3 +76,8 @@ write_json(Req, #state{hash = Hash} = State) ->
     Q = <<"update objects set version=version+1,value=value||hstore($2::text[]) where hash=$1">>,
     {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Hash, HProps]),
     {true, Req0, State}.
+
+delete_resource(Req, #state{hash = Hash} = State) ->
+    Q = <<"delete from objects where hash=$1">>,
+    {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Hash]),
+    {true, Req, State}.
