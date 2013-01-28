@@ -9,8 +9,9 @@
 -export([content_types_accepted/2]).
 -export([read_json/2]).
 -export([write_json/2]).
+-export([delete_resource/2]).
 
--record(state, {path, segments, hash}).
+-record(state, {path, segments, hash, mode}).
 
 init(_Transport, _Req, _Opts) ->
     {upgrade, protocol, cowboy_rest}.
@@ -18,20 +19,29 @@ init(_Transport, _Req, _Opts) ->
 rest_init(Req, _Opts) ->
     {ok, Req, #state{}}.
 
+parse_path(Path) ->
+    Segments = [case Segment of "*" -> {expr, star}; _ -> list_to_binary(Segment) end || Segment <- string:tokens(binary_to_list(Path), "/")],
+    case lists:any(fun ({expr, _}) -> true; (_) -> false end, Segments) of
+        true -> {expr, Segments};
+        false -> {pointer, Segments}
+    end.
+
 malformed_request(Req, State) ->
     {Path, Req0} = cowboy_req:path(Req),
-    Segments = [list_to_binary(L)  || L <- string:tokens(binary_to_list(Path), "/")],
-    {false, Req0, State#state{path = Path, segments = Segments}}.
+    {Mode, Segments} = parse_path(Path),
+    {false, Req0, State#state{path = Path, segments = Segments, mode = Mode}}.
 
 allowed_methods(Req, State) ->
-    {[<<"GET">>, <<"PUT">>], Req, State}.
+    {[<<"GET">>, <<"PUT">>, <<"DELETE">>], Req, State}.
 
-resource_exists(Req, #state{path = Path} = State) ->
+resource_exists(Req, #state{path = Path, mode = pointer} = State) ->
     Q = <<"select hash from objects where hash=md5($1)">>,
     case cloudstore_pg:equery(cloudstore_pool, Q, [Path]) of
         {ok, _, []} -> {false, Req, State};
         {ok, _, [{Hash}]} -> {true, Req, State#state{hash = Hash}}
-    end.
+    end;
+resource_exists(Req, #state{mode = expr} = State) ->
+    {true, Req, State}.
 
 content_types_provided(Req, State) ->
     {[{<<"application/json">>, read_json}], Req, State}.
@@ -47,13 +57,15 @@ hprops_to_props(HProps0, R) ->
     {[Name, Value], HProps} = lists:split(2, HProps0),
     hprops_to_props(HProps, [{Name, jiffy:decode(Value)} | R]).
 
-read_json(Req, #state{hash = Hash} = State) ->
+read_json(Req, #state{mode = pointer, hash = Hash} = State) ->
     Q = <<"select hstore_to_array(value) from objects where hash=$1">>,
     case cloudstore_pg:equery(cloudstore_pool, Q, [Hash]) of
         {ok, _, []} -> {halt, Req, State};
         {ok, _, [{HProps}]} ->
             {jiffy:encode({hprops_to_props(HProps)}), Req, State}
-    end.
+    end;
+read_json(Req, #state{mode = expr} = State) ->
+    {jiffy:encode([]), Req, State}.
 
 props_to_hprops(Props) ->
     lists:append([[Name, jiffy:encode(Value)] || {Name, Value} <- Props]).
@@ -61,16 +73,22 @@ props_to_hprops(Props) ->
 segments_to_hprops(Segments) ->
     lists:append(lists:foldl(fun(Value, R) -> [[list_to_binary(integer_to_list(length(R))), Value] | R] end, [], Segments)).
 
-write_json(Req, #state{hash = undefined, path = Path, segments = Segments} = State) ->
+write_json(Req, #state{mode = pointer, hash = undefined, path = Path, segments = Segments} = State) ->
     {ok, Json, Req0} = cowboy_req:body(Req),
     {Props} = jiffy:decode(Json),
     Q = <<"insert into objects(hash,version,path,value) values (md5($1),0,hstore($2::text[]),hstore($3::text[]))">>,
     {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Path, segments_to_hprops(Segments), props_to_hprops(Props)]),
     {true, Req0, State};
-write_json(Req, #state{hash = Hash} = State) ->
+
+write_json(Req, #state{mode = pointer, hash = Hash} = State) ->
     {ok, Json, Req0} = cowboy_req:body(Req),
     {Props} = jiffy:decode(Json),
     HProps = lists:append([[Name, jiffy:encode(Value)] || {Name, Value} <- Props]),
     Q = <<"update objects set version=version+1,value=value||hstore($2::text[]) where hash=$1">>,
     {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Hash, HProps]),
     {true, Req0, State}.
+
+delete_resource(Req, #state{mode = pointer, hash = Hash} = State) ->
+    Q = <<"delete from objects where hash=$1">>,
+    {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Hash]),
+    {true, Req, State}.
