@@ -19,7 +19,7 @@ done
 
 # set; exit 0
 
-apply_config_to=( )
+apply_config_to=( cloudstore/db cloudstore/rel/files )
 
 for d in ${apply_config_to[@]}
 do
@@ -36,12 +36,12 @@ IFS="
 "
             for line in $(< ${sf}); do
                 z=`echo ${line} | sed 's_\"_\\\"_g'`
-                z=`echo ${z} | sed 's_\\\$_APPLY-CONFIG-DOLLAR'`
+                z=`echo ${z} | sed 's_\\\$_CF-CONFIG-DOLLAR_g'`
                 x=`echo ${z} | sed -n "s_@@\([^@]*\)@@_$\{\1\}_g p"`
                 if [ -n "${x}" ]
                 then
                     y=`eval echo \"${x}\"`
-                    y=`echo ${y} | sed 's_APPLY-CONFIG-DOLLAR\\\$_g'`
+                    y=`echo ${y} | sed 's_CF-CONFIG-DOLLAR_\\\$_g'`
                     echo ${y} >> ${tf}
                 else
                     echo ${line} >> ${tf}
