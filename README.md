@@ -8,6 +8,9 @@ Cloud Fabric is a collection of modular components that provide the following se
 2. Real-time event notification when data changes
 3. Automatic networking and syncing with other Cloud Fabric servers
 
+![Cloud Fabric Architecture](https://raw.github.com/respectio/cloudfabric/master/doc/images/cloudfabric_arch.png)
+
+
 
 # Philosophy
 
@@ -18,6 +21,11 @@ With Cloud Fabric, you can easily create apps in HTML and JavaScript without the
 As a philosophy, Cloud Fabric is less of a traditional framework and more of a set of interoperable service APIs. The services talk to each other on an internal network and expose one external endpoint for communication with apps and other Cloud Fabric servers. Any service can be exchanged or customized without affect to the other services as long as the APIs remain the same.
 
 The code provided in the repository is meant to eventually serve as a fully functional, production ready server. However, any server or component that conforms to the Cloud Fabric API will be linked to from this document.
+
+[Read background](#background) section for more details.
+
+
+
 
 # Installation
 
@@ -43,12 +51,16 @@ For PostgreSQL 9.1+ on Debian Squeeze, install from [backports](http://backports
     apt-get -t squeeze-backports install postgresql-9.1
 
 
+
+
 # Configuration
 
 Edit config/base to change database settings, HTTP port, etc. then apply config and compile.
 
 1. $ ./apply_config.sh
 2. $ make
+
+
 
 
 # Services
@@ -69,4 +81,26 @@ Cloud Store provides a RESTful API for storing and retrieving data.
     ./cloudstore/rel/cloudstore/bin/cloudstore console
 
 [Cloud Store API Documenation](https://github.com/respectio/cloudfabric/wiki/CloudStore-API)
+
+
+
+
+# Background
+<a id="background"></a>
+
+Traditional apps are built around centralized servers with connectors to fetch data from other services.
+If a user wishes to create a backup of app data, he/she must manually export the data to a personal data store (PDS) or harddrive.
+Additionally, the app developer must manually support each 3rd party data provider.
+![Traditional App Architecture](https://raw.github.com/respectio/cloudfabric/master/doc/images/app_arch_traditional.png)
+
+
+Cloud Fabric's Personal Data Store architecture puts users back in control of their data while making it easier for developers to create data rich and scalable apps.
+In an ideal PDS architecture, user data is proxied through the user's PDS.
+This enables auto-caching of data, a signle API endpoint for personal data, and a distributed architecture similar to email.
+![Cloud Fabric App Architecture](https://raw.github.com/respectio/cloudfabric/master/doc/images/app_arch_cloudfabric.png)
+
+While Cloud Fabric's ideal architecture uses the PDS as the user's single API data endpoint, almost any hybrid configuration is possible.
+The main purpose of Cloud Fabric is to make it easy to permission and manage distributed personal data.
+As PDSs become more interoperable, more and more apps' architecture will look like the ideal diagram.
+
 
