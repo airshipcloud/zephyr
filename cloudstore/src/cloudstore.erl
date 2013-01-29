@@ -57,6 +57,15 @@ hprops_to_props(HProps0, R) ->
     {[Name, Value], HProps} = lists:split(2, HProps0),
     hprops_to_props(HProps, [{Name, jiffy:decode(Value)} | R]).
 
+hprops_to_path(HProps) ->
+    R = hprops_to_path(HProps, []),
+    list_to_binary(lists:append([["/", binary_to_list(Segment)] || {_, Segment} <- lists:keysort(1, R)])).
+
+hprops_to_path([], R) -> R;
+hprops_to_path(HProps0, R) ->
+    {[Index, Segment], HProps} = lists:split(2, HProps0),
+    hprops_to_path(HProps, [{list_to_integer(binary_to_list(Index)), Segment} | R]).
+
 read_json(Req, #state{mode = pointer, hash = Hash} = State) ->
     Q = <<"select hstore_to_array(value) from objects where hash=$1">>,
     case cloudstore_pg:equery(cloudstore_pool, Q, [Hash]) of
@@ -64,14 +73,16 @@ read_json(Req, #state{mode = pointer, hash = Hash} = State) ->
         {ok, _, [{HProps}]} ->
             {jiffy:encode({hprops_to_props(HProps)}), Req, State}
     end;
-read_json(Req, #state{mode = expr} = State) ->
-    {jiffy:encode([]), Req, State}.
+read_json(Req, #state{mode = expr, segments = Segments} = State) ->
+    Q = <<"select hstore_to_array(path), hstore_to_array(value) from objects where path @> hstore($1::text[])">>,
+    {ok, _, R} = cloudstore_pg:equery(cloudstore_pool, Q, [segments_to_hprops(Segments)]),
+    {jiffy:encode({[{hprops_to_path(PathHProps), {hprops_to_props(ValueHProps)}} || {PathHProps, ValueHProps} <- R]}), Req, State}.
 
 props_to_hprops(Props) ->
     lists:append([[Name, jiffy:encode(Value)] || {Name, Value} <- Props]).
 
 segments_to_hprops(Segments) ->
-    lists:append(lists:foldl(fun(Value, R) -> [[list_to_binary(integer_to_list(length(R))), Value] | R] end, [], Segments)).
+    lists:append(lists:foldl(fun({expr, star}, R) -> [[] | R]; (Value, R) -> [[list_to_binary(integer_to_list(length(R))), Value] | R] end, [], Segments)).
 
 write_json(Req, #state{mode = pointer, hash = undefined, path = Path, segments = Segments} = State) ->
     {ok, Json, Req0} = cowboy_req:body(Req),
