@@ -1,12 +1,32 @@
 Cloud Fabric is an open source stack to make scalable, real-time apps on top of a network of personal data stores.
 
+# Status
+
+**Cloud Fabric is a new project in its infancy but moving quickly.**
+
+Core components of Cloud Fabric were developed for [Connect.Me](http://connect.me), are production grade, and will be available in Github soon.
+
+We're building Cloud Fabric so that we can more quickly build other apps off of a common framework.
+We also needed a reference implementation for a PDS endpoint to make PDSs interoperable.
+
+The [CloudStore](https://github.com/respectio/cloudfabric/wiki/CloudStore-API) is functional. 
+All other components are in the early stages of specing and documenting but are small in scope and should be available in Feb, 2013.
+
+* [CloudStore](https://github.com/respectio/cloudfabric/wiki/CloudStore-API): GET/PUT/DELETE supported, REPLACE is WIP
+* Sharding: WIP
+* Tests: WIP
+* Router: WIP
+* Engines Harness: WIP
+
 # Overview
 
-Cloud Fabric is a collection of modular components that provide the following services:
+Cloud Fabric is a collection of modular components that interact via HTTP APIs.
 
-1. Scalable data store with a fully customizable security layer
-2. Real-time event notification when data changes
-3. Automatic networking and syncing with other Cloud Fabric servers
+**Components:**
+
+1. Router: API endpoint that routes requests to engines
+2. CloudStore: data store with OAuth security layer and real-time event notifications
+3. Engines + XDI: automatic networking and syncing with other personal data stores
 
 ![Cloud Fabric Architecture](https://raw.github.com/respectio/cloudfabric/master/doc/images/cloudfabric_arch.png)
 
