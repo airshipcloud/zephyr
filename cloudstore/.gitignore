@@ -2,4 +2,5 @@ rel/cloudstore
 ebin
 deps
 db/roles.sql
+test/config.js
 rel/files/sys.config

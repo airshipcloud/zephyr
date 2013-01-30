@@ -19,7 +19,7 @@ done
 
 # set; exit 0
 
-apply_config_to=( cloudstore/db cloudstore/rel/files )
+apply_config_to=( cloudstore/db cloudstore/rel/files cloudstore/test )
 
 for d in ${apply_config_to[@]}
 do
