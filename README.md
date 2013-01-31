@@ -106,12 +106,36 @@ Cloud Store provides a RESTful API for storing and retrieving data.
 
     ./cloudstore/rel/cloudstore/bin/cloudstore console
 
-In browser or curl, GET [http://127.0.0.1:10002/*](http://127.0.0.1:10002/*) which should return and empty JSON object.
+In browser or curl, GET [http://127.0.0.1:10002/*](http://127.0.0.1:10002/*) which should return an empty JSON object.
 
-PUT new data into the store...
+Interact with Cloud Store...
+
+**PUT**
 
     curl --data "{\"foo\":\"bar\"}" --request PUT --header "Content-Type: application/json" --verbose http://127.0.0.1:10002/foo/bar/baz
+
+**GET**
+
     curl --verbose http://127.0.0.1:10002/foo/bar/baz
+
+**DELETE**
+
+    curl --request DELETE --verbose http://127.0.0.1:10002/foo/bar/baz
+
+Note that PUT is a merge operation for objects. 
+This makes it easy for clients to update specific attributes of an existing object without needing to send the entire object.
+
+    curl --data "{\"foo\":\"bar\"}" --request PUT --header "Content-Type: application/json" --verbose http://127.0.0.1:10002/foo/bar/baz
+    curl --data "{\"new\":\"bar\"}" --request PUT --header "Content-Type: application/json" --verbose http://127.0.0.1:10002/foo/bar/baz
+    curl --verbose http://127.0.0.1:10002/foo/bar/baz
+
+    Returns:
+    {
+      "foo": "bar",
+      "new": "bar"
+    }
+
+To replace the entire object, use REPLACE or do a DELETE then PUT.
 
 [Cloud Store API Documenation](https://github.com/respectio/cloudfabric/wiki/CloudStore-API)
 
