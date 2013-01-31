@@ -10,9 +10,9 @@ start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 rest() ->
-    RestDispatch = [{'_', [
+    RestDispatch = cowboy_router:compile([{'_', [
         {'_', cloudstore, []}
-    ]}],
+    ]}]),
     {ok, Port} = application:get_env(cloudstore, port),
     RestConfig = [rest_listener, 100,
         [{port, Port}],
