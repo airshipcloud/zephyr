@@ -56,15 +56,15 @@ The code provided in the repository is meant to eventually serve as a fully func
 
 * [Erlang R15B03](https://www.erlang-solutions.com/downloads/download-erlang-otp) – for core framework components
 * [Postgres 9.1+](http://www.postgresql.org/) – for CloudStore
-* [Node.JS](http://nodejs.org/) – (optional) for tests and apps
+* [Node.JS](http://nodejs.org/) – (optional) for tests and compiling JavaScript client libaries
 
 **OSX**
 
     brew install erlang
     brew install postgres
     brew install nodejs
+    npm install -g mocha
     
-
 **Debian**
 
 For Erlang, follow instructions at https://www.erlang-solutions.com/downloads/download-erlang-otp
