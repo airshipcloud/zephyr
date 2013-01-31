@@ -106,6 +106,13 @@ Cloud Store provides a RESTful API for storing and retrieving data.
 
     ./cloudstore/rel/cloudstore/bin/cloudstore console
 
+In browser or curl, GET [http://127.0.0.1:10002/*](http://127.0.0.1:10002/*) which should return and empty JSON object.
+
+PUT new data into the store...
+
+    curl --data "{\"foo\":\"bar\"}" --request PUT --header "Content-Type: application/json" --verbose http://127.0.0.1:10002/foo/bar/baz
+    curl --verbose http://127.0.0.1:10002/foo/bar/baz
+
 [Cloud Store API Documenation](https://github.com/respectio/cloudfabric/wiki/CloudStore-API)
 
 
