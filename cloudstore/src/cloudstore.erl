@@ -5,13 +5,14 @@
 -export([malformed_request/2]).
 -export([allowed_methods/2]).
 -export([resource_exists/2]).
+-export([generate_etag/2]).
 -export([content_types_provided/2]).
 -export([content_types_accepted/2]).
 -export([read_json/2]).
 -export([write_json/2]).
 -export([delete_resource/2]).
 
--record(state, {path, segments, hash, mode}).
+-record(state, {path, segments, hash, etag, mode}).
 
 init(_Transport, _Req, _Opts) ->
     {upgrade, protocol, cowboy_rest}.
@@ -35,13 +36,18 @@ allowed_methods(Req, State) ->
     {[<<"GET">>, <<"PUT">>, <<"DELETE">>], Req, State}.
 
 resource_exists(Req, #state{path = Path, mode = pointer} = State) ->
-    Q = <<"select hash from objects where hash=md5($1)">>,
+    Q = <<"select hash,md5(version::text) from objects where hash=md5($1)">>,
     case cloudstore_pg:equery(cloudstore_pool, Q, [Path]) of
         {ok, _, []} -> {false, Req, State};
-        {ok, _, [{Hash}]} -> {true, Req, State#state{hash = Hash}}
+        {ok, _, [{Hash, ETag}]} -> {true, Req, State#state{hash = Hash, etag = ETag}}
     end;
 resource_exists(Req, #state{mode = expr} = State) ->
     {true, Req, State}.
+
+generate_etag(Req, #state{etag = undefined} = State) ->
+    {undefined, Req, State};
+generate_etag(Req, #state{etag = ETag} = State) ->
+    {list_to_binary([<<"\"">>, ETag, <<"\"">>]), Req, State}.
 
 content_types_provided(Req, State) ->
     {[{<<"application/json">>, read_json}], Req, State}.
