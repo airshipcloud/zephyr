@@ -88,6 +88,8 @@ Edit config/base to change database settings, HTTP port, etc. then apply config 
     ./apply_config.sh
     make
 
+[Learn more](https://github.com/respectio/cloudfabric/wiki/Configuration) in the wiki.
+
 
 # Services
 
