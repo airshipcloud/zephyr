@@ -12,7 +12,7 @@
 -export([write_json/2]).
 -export([delete_resource/2]).
 
--record(state, {path, segments, hash, etag, mode}).
+-record(state, {path, segments, hash, hashes, etag, mode}).
 
 init(_Transport, _Req, _Opts) ->
     {upgrade, protocol, cowboy_rest}.
@@ -41,8 +41,10 @@ resource_exists(Req, #state{path = Path, mode = pointer} = State) ->
         {ok, _, []} -> {false, Req, State};
         {ok, _, [{Hash, ETag}]} -> {true, Req, State#state{hash = Hash, etag = ETag}}
     end;
-resource_exists(Req, #state{mode = expr} = State) ->
-    {true, Req, State}.
+resource_exists(Req, #state{segments = Segments, mode = expr} = State) ->
+    Q = <<"select array_agg(hash),md5(array_to_string(array_agg(version::text), ' ')) from (select hash,version from objects where path @> hstore($1::text[]) order by path) o">>,
+    {ok, _, [{Hashes, ETag}]} = cloudstore_pg:equery(cloudstore_pool, Q, [segments_to_hprops(Segments)]),
+    {true, Req, State#state{hashes = Hashes, etag = ETag}}.
 
 generate_etag(Req, #state{etag = undefined} = State) ->
     {undefined, Req, State};
@@ -79,9 +81,9 @@ read_json(Req, #state{mode = pointer, hash = Hash} = State) ->
         {ok, _, [{HProps}]} ->
             {jiffy:encode({hprops_to_props(HProps)}), Req, State}
     end;
-read_json(Req, #state{mode = expr, segments = Segments} = State) ->
-    Q = <<"select hstore_to_array(path), hstore_to_array(value) from objects where path @> hstore($1::text[])">>,
-    {ok, _, R} = cloudstore_pg:equery(cloudstore_pool, Q, [segments_to_hprops(Segments)]),
+read_json(Req, #state{mode = expr, hashes = Hashes} = State) ->
+    Q = <<"select hstore_to_array(path), hstore_to_array(value) from objects where hash=any($1::text[]) order by path">>,
+    {ok, _, R} = cloudstore_pg:equery(cloudstore_pool, Q, [Hashes]),
     {jiffy:encode({[{hprops_to_path(PathHProps), {hprops_to_props(ValueHProps)}} || {PathHProps, ValueHProps} <- R]}), Req, State}.
 
 props_to_hprops(Props) ->
