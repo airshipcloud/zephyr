@@ -106,11 +106,6 @@ Cloud Store provides a RESTful API for storing and retrieving data.
 
     $ ./cloudstore/rel/cloudstore/bin/cloudstore console
 
-** Run Tests **
-
-    cd cloudstore
-    mocha
-
 In browser or curl, GET [http://127.0.0.1:10002/*](http://127.0.0.1:10002/*) which should return an empty JSON object.
 
 Interact with Cloud Store...
@@ -145,6 +140,16 @@ To replace the entire object, use REPLACE or do a DELETE then PUT.
 [Cloud Store API Documenation](https://github.com/respectio/cloudfabric/wiki/CloudStore-API)
 
 
+# Tests
+
+API tests are written in [mocha](http://visionmedia.github.com/mocha/)
+
+**Run Cloud Store Tests**
+
+    cd cloudstore
+    mocha
+
+[Learn more](https://github.com/respectio/cloudfabric/wiki/Testing) in the wiki.
 
 
 # Background
