@@ -54,14 +54,18 @@ The code provided in the repository is meant to eventually serve as a fully func
 
 **Requirements**
 
-* [Erlang R15B03](https://www.erlang-solutions.com/downloads/download-erlang-otp)
-* [Postgres 9.1+](http://www.postgresql.org/)
+* [Erlang R15B03](https://www.erlang-solutions.com/downloads/download-erlang-otp) – for core framework components
+* [Postgres 9.1+](http://www.postgresql.org/) – for CloudStore
+* [Node.JS](http://nodejs.org/) – (optional) for tests and compiling JavaScript client libaries
 
 **OSX**
 
     brew install erlang
     brew install postgres
-
+    brew install nodejs
+    npm install -g mocha
+    npm install -g node-uuid
+    
 **Debian**
 
 For Erlang, follow instructions at https://www.erlang-solutions.com/downloads/download-erlang-otp
@@ -69,6 +73,10 @@ For Erlang, follow instructions at https://www.erlang-solutions.com/downloads/do
 For PostgreSQL 9.1+ on Debian Squeeze, install from [backports](http://backports-master.debian.org/Instructions/).
 
     apt-get -t squeeze-backports install postgresql-9.1
+    apt-get nodejs
+    apt-get npm
+    npm install -g mocha
+    npm install -g node-uuid
 
 
 
@@ -77,10 +85,8 @@ For PostgreSQL 9.1+ on Debian Squeeze, install from [backports](http://backports
 
 Edit config/base to change database settings, HTTP port, etc. then apply config and compile.
 
-1. $ ./apply_config.sh
-2. $ make
-
-
+    ./apply_config.sh
+    make
 
 
 # Services
@@ -91,14 +97,50 @@ The Cloud Fabric stack is composed of several modular services that talk to each
 
 **Create Postgres Database**
 
-    cd cloudstore/db
-    ./init.sh
+    $ cd cloudstore/db
+    $ ./init.sh
 
 Cloud Store provides a RESTful API for storing and retrieving data.
 
 **Start Cloud Store**
 
-    ./cloudstore/rel/cloudstore/bin/cloudstore console
+    $ ./cloudstore/rel/cloudstore/bin/cloudstore console
+
+** Run Tests **
+
+    cd cloudstore
+    mocha
+
+In browser or curl, GET [http://127.0.0.1:10002/*](http://127.0.0.1:10002/*) which should return an empty JSON object.
+
+Interact with Cloud Store...
+
+**PUT**
+
+    curl --data "{\"foo\":\"bar\"}" --request PUT --header "Content-Type: application/json" --verbose http://127.0.0.1:10002/foo/bar/baz
+
+**GET**
+
+    curl --verbose http://127.0.0.1:10002/foo/bar/baz
+
+**DELETE**
+
+    curl --request DELETE --verbose http://127.0.0.1:10002/foo/bar/baz
+
+Note that PUT is a merge operation for objects. 
+This makes it easy for clients to update specific attributes of an existing object without needing to send the entire object.
+
+    curl --data "{\"foo\":\"bar\"}" --request PUT --header "Content-Type: application/json" --verbose http://127.0.0.1:10002/foo/bar/baz
+    curl --data "{\"new\":\"bar\"}" --request PUT --header "Content-Type: application/json" --verbose http://127.0.0.1:10002/foo/bar/baz
+    curl --verbose http://127.0.0.1:10002/foo/bar/baz
+
+    Returns:
+    {
+      "foo": "bar",
+      "new": "bar"
+    }
+
+To replace the entire object, use REPLACE or do a DELETE then PUT.
 
 [Cloud Store API Documenation](https://github.com/respectio/cloudfabric/wiki/CloudStore-API)
 
