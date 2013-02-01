@@ -1,0 +1,11 @@
+{[
+    {
+        "name": "XDI Engine",
+        "schema": "http://xdi.org/xdi",
+        "description": "XDI",
+        "route": "/xdi",
+        "private": {
+            "forward": "127.0.0.1:10003"
+        }
+    }
+]}
