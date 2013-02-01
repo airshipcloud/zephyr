@@ -14,9 +14,9 @@ All other components are in the early stages of specing and documenting but are 
 
 * [CloudStore](https://github.com/respectio/cloudfabric/wiki/CloudStore-API): GET/PUT/DELETE supported, REPLACE is WIP
 * Sharding: WIP
-* Tests: WIP
+* Tests: basic Cloud Store mocha tests complete
 * Router: WIP
-* Engines Harness: WIP
+* Engines: XDI Engine in progress
 
 # Overview
 
@@ -55,7 +55,7 @@ The code provided in the repository is meant to eventually serve as a fully func
 **Requirements**
 
 * [Erlang R15B03](https://www.erlang-solutions.com/downloads/download-erlang-otp) – for core framework components
-* [Postgres 9.1+](http://www.postgresql.org/) – for CloudStore
+* [Postgres 9.1+](http://www.postgresql.org/) with [hstore extension](http://www.postgresql.org/docs/9.1/static/hstore.html) – for CloudStore
 * [Node.JS](http://nodejs.org/) – (optional) for tests and compiling JavaScript client libaries
 
 **OSX**
@@ -73,6 +73,7 @@ For Erlang, follow instructions at https://www.erlang-solutions.com/downloads/do
 For PostgreSQL 9.1+ on Debian Squeeze, install from [backports](http://backports-master.debian.org/Instructions/).
 
     apt-get -t squeeze-backports install postgresql-9.1
+    apt-get install postgresql-contrib
     apt-get nodejs
     apt-get npm
     npm install -g mocha
