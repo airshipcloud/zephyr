@@ -64,6 +64,7 @@ The code provided in the repository is meant to eventually serve as a fully func
     brew install postgres
     brew install nodejs
     npm install -g mocha
+    npm install -g node-uuid
     
 **Debian**
 
@@ -75,6 +76,7 @@ For PostgreSQL 9.1+ on Debian Squeeze, install from [backports](http://backports
     apt-get nodejs
     apt-get npm
     npm install -g mocha
+    npm install -g node-uuid
 
 
 
@@ -83,10 +85,8 @@ For PostgreSQL 9.1+ on Debian Squeeze, install from [backports](http://backports
 
 Edit config/base to change database settings, HTTP port, etc. then apply config and compile.
 
-1. $ ./apply_config.sh
-2. $ make
-
-
+    ./apply_config.sh
+    make
 
 
 # Services
@@ -97,14 +97,19 @@ The Cloud Fabric stack is composed of several modular services that talk to each
 
 **Create Postgres Database**
 
-    cd cloudstore/db
-    ./init.sh
+    $ cd cloudstore/db
+    $ ./init.sh
 
 Cloud Store provides a RESTful API for storing and retrieving data.
 
 **Start Cloud Store**
 
-    ./cloudstore/rel/cloudstore/bin/cloudstore console
+    $ ./cloudstore/rel/cloudstore/bin/cloudstore console
+
+** Run Tests **
+
+    cd cloudstore
+    mocha
 
 In browser or curl, GET [http://127.0.0.1:10002/*](http://127.0.0.1:10002/*) which should return an empty JSON object.
 
