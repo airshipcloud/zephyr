@@ -73,7 +73,7 @@ For Erlang, follow instructions at https://www.erlang-solutions.com/downloads/do
 For PostgreSQL 9.1+ on Debian Squeeze, install from [backports](http://backports-master.debian.org/Instructions/).
 
     apt-get -t squeeze-backports install postgresql-9.1
-    apt-get install postgresql-contrib
+    apt-get install postgresql-contrib-9.1
     apt-get nodejs
     apt-get npm
     npm install -g mocha
