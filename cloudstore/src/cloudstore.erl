@@ -18,7 +18,7 @@ init(_Transport, _Req, _Opts) ->
     {upgrade, protocol, cowboy_rest}.
 
 rest_init(Req, _Opts) ->
-    {ok, Req, #state{}}.
+    {ok, cloudstore_security:add_cors(Req), #state{}}.
 
 parse_path(Path) ->
     Segments = [case Segment of "*" -> {expr, star}; _ -> list_to_binary(Segment) end || Segment <- string:tokens(binary_to_list(Path), "/")],
