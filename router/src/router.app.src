@@ -1,0 +1,12 @@
+{application, router,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { router_app, []}},
+  {env, []}
+ ]}.
