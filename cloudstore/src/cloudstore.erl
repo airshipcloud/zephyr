@@ -48,6 +48,8 @@ resource_exists(Req, #state{segments = Segments, mode = expr} = State) ->
 
 generate_etag(Req, #state{etag = undefined} = State) ->
     {undefined, Req, State};
+generate_etag(Req, #state{etag = null} = State) ->
+    {undefined, Req, State};
 generate_etag(Req, #state{etag = ETag} = State) ->
     {list_to_binary([<<"\"">>, ETag, <<"\"">>]), Req, State}.
 
