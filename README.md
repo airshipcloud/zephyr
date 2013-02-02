@@ -149,7 +149,7 @@ API tests are written in [mocha](http://visionmedia.github.com/mocha/)
 
     cd cloudstore
     npm install
-    mocha
+    npm test
 
 [Learn more](https://github.com/respectio/cloudfabric/wiki/Testing) in the wiki.
 
