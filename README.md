@@ -64,7 +64,6 @@ The code provided in the repository is meant to eventually serve as a fully func
     brew install postgres
     brew install nodejs
     npm install -g mocha
-    npm install -g node-uuid
     
 **Debian**
 
@@ -77,7 +76,6 @@ For PostgreSQL 9.1+ on Debian Squeeze, install from [backports](http://backports
     apt-get nodejs
     apt-get npm
     npm install -g mocha
-    npm install -g node-uuid
 
 
 
@@ -150,6 +148,7 @@ API tests are written in [mocha](http://visionmedia.github.com/mocha/)
 **Run Cloud Store Tests**
 
     cd cloudstore
+    npm install
     mocha
 
 [Learn more](https://github.com/respectio/cloudfabric/wiki/Testing) in the wiki.
