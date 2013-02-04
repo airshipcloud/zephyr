@@ -17,6 +17,7 @@
         ]}
     ]},
     {cloudstore, [
+        {origin, <<"@@CLOUDSTORE_ORIGIN@@">>},
         {port, @@CLOUDSTORE_PORT@@}
     ]}
 ].

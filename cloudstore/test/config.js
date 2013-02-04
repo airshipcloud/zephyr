@@ -1,3 +1,5 @@
-CLOUDSTORE_BASE='http://localhost:10002';
-CLOUDSTORE_DOMAIN='localhost';
-CLOUDSTORE_PORT=10002;
+exports = module.exports = {
+  BASE    : 'http://localhost:10002',
+  DOMAIN  : 'localhost',
+  PORT    : 10002
+}

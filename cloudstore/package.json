@@ -1,0 +1,13 @@
+{
+  "name": "cloudstore",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "./rel/cloudstore/bin/cloudstore console",
+    "test": "mocha --compilers coffee:coffee-script -R spec"
+  },
+  "dependencies": {
+    "assert": "*",
+    "chai": "*",
+    "node-uuid": "1.x"
+  }
+}
