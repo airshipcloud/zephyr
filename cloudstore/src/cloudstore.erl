@@ -82,9 +82,16 @@ read_json(Req, #state{mode = pointer, hash = Hash} = State) ->
             {jiffy:encode({hprops_to_props(HProps)}), Req, State}
     end;
 read_json(Req, #state{mode = expr, hashes = Hashes} = State) ->
+    {LimitValue, Req0} = cowboy_req:qs_val(<<"limit">>, Req),
+    {OffsetValue, Req1} = cowboy_req:qs_val(<<"offset">>, Req0),
+    Limit = parse_integer_value(LimitValue, 1000), 
+    Offset = parse_integer_value(OffsetValue, 0), 
     Q = <<"select hstore_to_array(path), hstore_to_array(value) from objects where hash=any($1::text[]) order by path">>,
-    {ok, _, R} = cloudstore_pg:equery(cloudstore_pool, Q, [Hashes]),
-    {jiffy:encode({[{hprops_to_path(PathHProps), {hprops_to_props(ValueHProps)}} || {PathHProps, ValueHProps} <- R]}), Req, State}.
+    {ok, _, R} = cloudstore_pg:equery(cloudstore_pool, Q, [lists:sublist(Hashes, Offset + 1, Limit)]),
+    {jiffy:encode({[{hprops_to_path(PathHProps), {hprops_to_props(ValueHProps)}} || {PathHProps, ValueHProps} <- R]}), Req1, State}.
+
+parse_integer_value(Value, Default) ->
+    case Value of V when is_binary(V) -> list_to_integer(binary_to_list(V)); _ -> Default end.
 
 props_to_hprops(Props) ->
     lists:append([[Name, jiffy:encode(Value)] || {Name, Value} <- Props]).
