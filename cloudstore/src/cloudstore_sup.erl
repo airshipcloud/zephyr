@@ -17,7 +17,7 @@ rest() ->
     RestConfig = [rest_listener, 100,
         [{port, Port}],
         [{env, [{dispatch, RestDispatch}]}]],
-    {rest, {cowboy, start_http, RestConfig}, permanent, 5000, supervisor, dynamic}.
+    {rest, {cowboy, start_http, RestConfig}, permanent, 5000, supervisor, [dynamic]}.
 
 init([]) ->
     Pool = poolboy:child_spec(cloudstore_pool,

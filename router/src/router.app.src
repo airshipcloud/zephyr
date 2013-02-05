@@ -5,7 +5,9 @@
   {registered, []},
   {applications, [
                   kernel,
-                  stdlib
+                  stdlib,
+                  cowboy,
+                  jiffy
                  ]},
   {mod, { router_app, []}},
   {env, []}

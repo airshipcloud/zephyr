@@ -8,7 +8,8 @@
          {error_logger_mf_maxfiles, 5}           % 5 files max
         ]},
     {router, [
-        {origin, <<"*">>},
-        {port, 10003}
+        {origin, <<"@@ROUTER_ORIGIN@@">>},
+        {port, @@ROUTER_PORT@@}
     ]}
 ].
+
