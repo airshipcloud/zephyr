@@ -4,6 +4,7 @@
 -export([rest_init/2]).
 -export([malformed_request/2]).
 -export([allowed_methods/2]).
+-export([forbidden/2]).
 -export([resource_exists/2]).
 -export([generate_etag/2]).
 -export([content_types_provided/2]).
@@ -34,6 +35,17 @@ malformed_request(Req, State) ->
 
 allowed_methods(Req, State) ->
     {[<<"GET">>, <<"PUT">>, <<"DELETE">>], Req, State}.
+
+forbidden(Req, State) ->
+    {Token, Req0} = cowboy_req:cookie(<<"token">>, Req),
+    case Token of
+        undefined ->
+            {true, Req0, State};
+        true ->
+            {true, Req0, State};
+        _ ->
+            {false, Req0, State}
+    end.
 
 resource_exists(Req, #state{path = Path, mode = pointer} = State) ->
     Q = <<"select hash,md5(version::text) from objects where hash=md5($1)">>,
