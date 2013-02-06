@@ -3,26 +3,24 @@
 
 -behaviour(supervisor).
 
-%% API
 -export([start_link/0]).
 
-%% Supervisor callbacks
 -export([init/1]).
 
-%% Helper macro for declaring children of supervisor
--define(CHILD(I, Type), {I, {I, start_link, []}, permanent, 5000, Type, [I]}).
-
-%% ===================================================================
-%% API functions
-%% ===================================================================
+-export([rest/0]).
 
 start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
-%% ===================================================================
-%% Supervisor callbacks
-%% ===================================================================
+rest() ->
+    RestDispatch = cowboy_router:compile([{'_', [
+        {"/services", router_services, []}
+    ]}]),
+    {ok, Port} = application:get_env(router, port),
+    RestConfig = [rest_listener, 100,
+        [{port, Port}],
+        [{env, [{dispatch, RestDispatch}]}]],
+    {rest, {cowboy, start_http, RestConfig}, permanent, 5000, supervisor, [dynamic]}.
 
 init([]) ->
-    {ok, { {one_for_one, 5, 10}, []} }.
-
+    {ok, { {one_for_one, 5, 10}, [ rest() ] } }.
