@@ -44,7 +44,7 @@ forbidden(Req, #state{segments = Segments} = State) ->
         true ->
             {true, Req0, State};
         _ ->
-            Q = <<"select access from tokens where path @> hstore($1::text[]) and id=$2">>,
+            Q = <<"select access from tokens where path <@ hstore($1::text[]) and id=$2">>,
             case cloudstore_pg:equery(cloudstore_pool, Q, [segments_to_hprops(Segments), Token]) of
                 {ok, _, []} ->
                     {true, Req0, State};
