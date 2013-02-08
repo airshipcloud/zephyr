@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Auth</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="row">
+      <form class="span4 offset4" method="post" action="/auth">
+        <fieldset>
+          <legend>Allow?</legend>
+          <label class="radio">
+            <input type="radio" name="optionsRadios" id="yes" value="option1" checked="true" />
+            Yes
+          </label>
+          <label class="radio">
+            <input type="radio" name="optionsRadios" id="no" value="option2" />
+            No
+          </label>
+          <hr />
+          <div class="row">
+          </div>
+          <button type="submit" class="btn">Proceed</button>
+        </fieldset>
+      </form>
+    </div>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
