@@ -11,6 +11,7 @@ start_link() ->
 
 rest() ->
     RestDispatch = cowboy_router:compile([{'_', [
+        {"/tokens/[:token]", cloudstore_tokens, []},
         {'_', cloudstore, []}
     ]}]),
     {ok, Port} = application:get_env(cloudstore, port),
