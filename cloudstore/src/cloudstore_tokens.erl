@@ -6,7 +6,9 @@
 -export([allowed_methods/2]).
 -export([resource_exists/2]).
 -export([content_types_provided/2]).
+-export([content_types_accepted/2]).
 -export([read_json/2]).
+-export([write_json/2]).
 
 -record(state, {token, acl}).
 
@@ -16,8 +18,9 @@ init(_Transport, _Req, _Opts) ->
 rest_init(Req, _Opts) ->
     {ok, cloudstore_security:add_cors(Req), #state{}}.
 
-%%parse_path(Path) ->
-%%    [case Segment of "*" -> {expr, star}; _ -> list_to_binary(Segment) end || Segment <- string:tokens(binary_to_list(Path), "/")].
+path_to_hprops(Path) ->
+    Segments = [case Segment of "*" -> {expr, star}; _ -> list_to_binary(Segment) end || Segment <- string:tokens(binary_to_list(Path), "/")],
+    lists:append(lists:foldl(fun({expr, star}, R) -> [[] | R]; (Value, R) -> [[list_to_binary(integer_to_list(length(R))), Value] | R] end, [], Segments)).
 
 hprops_to_path(HProps) ->
     R = hprops_to_path(HProps, []),
@@ -45,5 +48,17 @@ resource_exists(Req, #state{token = Token} = State) ->
 content_types_provided(Req, State) ->
     {[{<<"application/json">>, read_json}], Req, State}.
 
+content_types_accepted(Req, State) ->
+    {[{<<"application/json">>, write_json}], Req, State}.
+
 read_json(Req, #state{acl = Acl} = State) ->
     {jiffy:encode({[{Path, Access} || {Path, Access} <- Acl]}), Req, State}.
+
+write_json(Req, #state{token = Token} = State) ->
+    {ok, Json, Req0} = cowboy_req:body(Req),
+    {Props} = jiffy:decode(Json),
+    ok = lists:foreach(fun({Path, Access}) ->
+        Q = <<"insert into tokens(id,path,access) values ($1,hstore($2::text[]),$3)">>,
+        {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Token, path_to_hprops(Path), Access])
+    end, Props),
+    {true, Req0, State}.
