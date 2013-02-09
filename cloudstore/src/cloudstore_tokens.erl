@@ -4,6 +4,7 @@
 -export([rest_init/2]).
 -export([malformed_request/2]).
 -export([allowed_methods/2]).
+-export([options/2]).
 -export([resource_exists/2]).
 -export([content_types_provided/2]).
 -export([content_types_accepted/2]).
@@ -36,7 +37,10 @@ malformed_request(Req, State) ->
     {false, Req0, State#state{token = Token}}.
 
 allowed_methods(Req, State) ->
-    {[<<"GET">>, <<"PUT">>, <<"DELETE">>], Req, State}.
+    {[<<"OPTIONS">>, <<"GET">>, <<"PUT">>, <<"DELETE">>], Req, State}.
+
+options(Req, State) ->
+    {ok, cloudstore_security:add_cors(Req), State}.
 
 resource_exists(Req, #state{token = Token} = State) ->
     Q = <<"select hstore_to_array(path),access from tokens where id=$1">>,
