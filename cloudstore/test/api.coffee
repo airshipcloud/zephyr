@@ -4,9 +4,11 @@ http    = require 'http'
 uuid    = require 'node-uuid'
 config  = require './config'
 
-describe 'Cloud Store API', ->  
+describe 'Cloud Store API', ->
   TEST_NAMESPACE = "/__tests__/#{uuid.v4()}"
   USERID = uuid.v4()
+  TOKEN = uuid.v4()
+  COOKIE = "token=#{TOKEN}"
 
   # cleanup test data
   after ->
@@ -19,7 +21,7 @@ describe 'Cloud Store API', ->
     firstName   : 'Bilbo'
     lastName    : 'Baggins'
 
-  httpOptions = (method, path, json = null) ->
+  httpOptions = (method, path, cookie = null, json = null) ->
     ret = {
       host: config.DOMAIN
       port: config.PORT
@@ -28,36 +30,55 @@ describe 'Cloud Store API', ->
       headers:
         'Content-Type': 'application/json'
     }
-    ret['Content-Length'] = json.length if json
+    ret['headers']['Content-Length'] = json.length if json
+    ret['headers']['Cookie'] = cookie if cookie
     ret
 
   assertEmpty = ->
     it 'should retrieve an empty object', (done) ->
-      req = http.request(httpOptions('GET', "#{TEST_NAMESPACE}/users/*"), (res) ->
+      opts = httpOptions('GET', "#{TEST_NAMESPACE}/users/#{USERID}/*", COOKIE)
+      req = http.request(opts, (res) ->
         assert.equal 200, res.statusCode
         res.on 'data', (chunk) ->
           assert.equal Object.keys(JSON.parse(chunk)).length, 0
         done()
       )
-      req.on 'error', (e) -> done()
+      req.on 'error', (e) ->
+        done()
       req.end()
 
-
-  assertEmpty()
-  it 'should set an object', (done) ->
-    json = JSON.stringify(user)
-    req = http.request(httpOptions('PUT', "#{TEST_NAMESPACE}/users/#{USERID}", json), (res) ->
+  it 'should set auth token', (done) ->
+    auth = {}
+    auth["#{TEST_NAMESPACE}/users/#{USERID}"] = 'rw'
+    json = JSON.stringify(auth)
+    req = http.request(httpOptions('PUT', "/tokens/#{TOKEN}", null, json), (res) ->
       assert.equal 204, res.statusCode
       res.on 'data', (chunk) ->
         assert.equal Object.keys(JSON.parse(chunk)).length, 0
       done()
     )
-    req.on 'error', (e) -> done()
+    req.on 'error', (e) ->
+      done()
+    req.write json
+    req.end()
+
+  assertEmpty()
+
+  it 'should set an object', (done) ->
+    json = JSON.stringify(user)
+    req = http.request(httpOptions('PUT', "#{TEST_NAMESPACE}/users/#{USERID}", COOKIE, json), (res) ->
+      assert.equal 204, res.statusCode
+      res.on 'data', (chunk) ->
+        assert.equal Object.keys(JSON.parse(chunk)).length, 0
+      done()
+    )
+    req.on 'error', (e) ->
+      done()
     req.write json
     req.end()
 
   it 'should retrieve an object', (done) ->
-    req = http.request(httpOptions('GET', "#{TEST_NAMESPACE}/users/*"), (res) ->
+    req = http.request(httpOptions('GET', "#{TEST_NAMESPACE}/users/#{USERID}/*", COOKIE), (res) ->
       assert.equal 200, res.statusCode
       res.on 'data', (chunk) ->
         data = JSON.parse(chunk)
@@ -71,15 +92,17 @@ describe 'Cloud Store API', ->
 
       done()
     )
-    req.on 'error', (e) -> done()
+    req.on 'error', (e) ->
+      done()
     req.end()
 
   it 'should delete an object', (done) ->
-    req = http.request(httpOptions('DELETE', "#{TEST_NAMESPACE}/users/#{USERID}"), (res) ->
+    req = http.request(httpOptions('DELETE', "#{TEST_NAMESPACE}/users/#{USERID}", COOKIE), (res) ->
       assert.equal 204, res.statusCode
       done()
     )
-    req.on 'error', (e) -> done()
+    req.on 'error', (e) ->
+      done()
     req.end()
 
   assertEmpty()
