@@ -1,0 +1,5 @@
+exports = module.exports = {
+  BASE    : '@@CLOUDSTORE_PROTOCOL@@://@@CLOUDSTORE_DOMAIN@@:@@CLOUDSTORE_PORT@@',
+  DOMAIN  : '@@CLOUDSTORE_DOMAIN@@',
+  PORT    : @@CLOUDSTORE_PORT@@
+}
