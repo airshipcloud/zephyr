@@ -1,10 +1,32 @@
-Zephyr is an open source stack to make scalable, real-time apps on top of a network of personal data stores.
+### Zephyr: OAuth + Firebase + Pub/Sub + Discovery
+
+**zeph·yr** _noun_
+* ~~a breeze from the west~~
+* **a lightweight fabric**
+
+
+Zephyr is a lightweight personal cloud framework that makes it easy to build
+scalable, real-time apps powered by personal data.
+
+A personal cloud is a relatively new term. In concept, it's a server that
+provides authentication and access to a user's personal data. Think of Facebook
+and Dropbox as personal clouds. Each one provides some form of authentication
+and an API for fetching and storing data on behalf of the user. The problem
+with existing proto-personal clouds is that they are neither standardized nor
+portable which means it's not ideal for users and more work for app developers
+to integrate. [Learn more](https://github.com/airships/zephyr/wiki/Personal-Clouds)
+about Personal Clouds.
+
+The goal of Zephyr is to create a simple personal cloud framework that provides
+a set of standardized APIs for authenticating, fetching, normalizing, storing,
+and sharing personal data between personal clouds and within a scalable app
+architecture.
+
+
 
 # Status
 
 **Zephyr is a new project in its infancy but moving quickly.**
-
-Core components of Zephyr were developed for [Connect.Me](http://connect.me), are production grade, and will be available in Github soon.
 
 We're building Zephyr so that we can more quickly build other apps off of a common framework.
 We also needed a reference implementation for a PDS endpoint to make PDSs interoperable.
