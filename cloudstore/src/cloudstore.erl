@@ -5,6 +5,7 @@
 -export([malformed_request/2]).
 -export([allowed_methods/2]).
 -export([forbidden/2]).
+-export([options/2]).
 -export([resource_exists/2]).
 -export([generate_etag/2]).
 -export([content_types_provided/2]).
@@ -34,7 +35,10 @@ malformed_request(Req, State) ->
     {false, Req0, State#state{path = Path, segments = Segments, mode = Mode}}.
 
 allowed_methods(Req, State) ->
-    {[<<"GET">>, <<"PUT">>, <<"DELETE">>], Req, State}.
+    {[<<"OPTIONS">>, <<"GET">>, <<"PUT">>, <<"DELETE">>], Req, State}.
+
+options(Req, State) ->
+    {ok, cloudstore_security:add_cors(Req), State}.
 
 read_token(Req) ->
     {Token0, Req0} = cowboy_req:qs_val(<<"token">>, Req),
@@ -72,7 +76,11 @@ resource_exists(Req, #state{path = Path, mode = pointer} = State) ->
     end;
 resource_exists(Req, #state{segments = Segments, mode = expr} = State) ->
     Q = <<"select array_agg(hash),md5(array_to_string(array_agg(version::text), ' ')) from (select hash,version from objects where path @> hstore($1::text[]) order by path) o">>,
-    {ok, _, [{Hashes, ETag}]} = cloudstore_pg:equery(cloudstore_pool, Q, [segments_to_hprops(Segments)]),
+    {ok, _, [{Hashes0, ETag}]} = cloudstore_pg:equery(cloudstore_pool, Q, [segments_to_hprops(Segments)]),
+    Hashes = case Hashes0 of
+        null -> [];
+        _ -> Hashes0
+    end,
     {true, Req, State#state{hashes = Hashes, etag = ETag}}.
 
 generate_etag(Req, #state{etag = undefined} = State) ->
@@ -117,8 +125,8 @@ read_json(Req, #state{access = Access, mode = pointer, hash = Hash} = State) whe
 read_json(Req, #state{access = Access, mode = expr, hashes = Hashes} = State) when Access =:= <<"rw">>; Access =:= <<"r">> ->
     {LimitValue, Req0} = cowboy_req:qs_val(<<"limit">>, Req),
     {OffsetValue, Req1} = cowboy_req:qs_val(<<"offset">>, Req0),
-    Limit = parse_integer_value(LimitValue, 1000), 
-    Offset = parse_integer_value(OffsetValue, 0), 
+    Limit = parse_integer_value(LimitValue, 1000),
+    Offset = parse_integer_value(OffsetValue, 0),
     Q = <<"select hstore_to_array(path), hstore_to_array(value) from objects where hash=any($1::text[]) order by path">>,
     {ok, _, R} = cloudstore_pg:equery(cloudstore_pool, Q, [lists:sublist(Hashes, Offset + 1, Limit)]),
     {jiffy:encode({[{hprops_to_path(PathHProps), {hprops_to_props(ValueHProps)}} || {PathHProps, ValueHProps} <- R]}), Req1, State};

@@ -109,26 +109,31 @@ Cloud Store provides a RESTful API for storing and retrieving data.
 
 In browser or curl, GET [http://127.0.0.1:10002/*](http://127.0.0.1:10002/*) which should return an empty JSON object.
 
+
+**Add Auth Token**
+
+    $ curl --request PUT --header "Content-Type: application/json" --data "{\"\":\"rw\"}" --verbose http://127.0.0.1:10002/tokens/SECRET
+
 Interact with Cloud Store...
 
 **PUT**
 
-    curl --data "{\"foo\":\"bar\"}" --request PUT --header "Content-Type: application/json" --verbose http://127.0.0.1:10002/foo/bar/baz
+    curl --data "{\"foo\":\"bar\"}" --request PUT --header "Content-Type: application/json, Cookie: token=SECRET" --verbose http://127.0.0.1:10002/foo/bar/baz
 
 **GET**
 
-    curl --verbose http://127.0.0.1:10002/foo/bar/baz
+    curl --header "Cookie: token=SECRET" --verbose http://127.0.0.1:10002/foo/bar/baz
 
 **DELETE**
 
-    curl --request DELETE --verbose http://127.0.0.1:10002/foo/bar/baz
+    curl --header "Cookie: token=SECRET" --request DELETE --verbose http://127.0.0.1:10002/foo/bar/baz
 
 Note that PUT is a merge operation for objects. 
 This makes it easy for clients to update specific attributes of an existing object without needing to send the entire object.
 
-    curl --data "{\"foo\":\"bar\"}" --request PUT --header "Content-Type: application/json" --verbose http://127.0.0.1:10002/foo/bar/baz
-    curl --data "{\"new\":\"bar\"}" --request PUT --header "Content-Type: application/json" --verbose http://127.0.0.1:10002/foo/bar/baz
-    curl --verbose http://127.0.0.1:10002/foo/bar/baz
+    curl --data "{\"foo\":\"bar\"}" --request PUT --header "Content-Type: application/json, Cookie: token=SECRET" --verbose http://127.0.0.1:10002/foo/bar/baz
+    curl --data "{\"new\":\"bar\"}" --request PUT --header "Content-Type: application/json, Cookie: token=SECRET" --verbose http://127.0.0.1:10002/foo/bar/baz
+    curl --header "Cookie: token=SECRET" --verbose http://127.0.0.1:10002/foo/bar/baz
 
     Returns:
     {
