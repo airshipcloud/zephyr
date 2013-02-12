@@ -1,6 +1,6 @@
 {
   "name": "cloudstore-ui",
-  "description": "Simple UI for interacting with Cloud Store",
+  "description": "Simple UI for interacting with CloudStore",
   "version": "0.0.1",
   "private": true,
   "scripts": {

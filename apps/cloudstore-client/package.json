@@ -1,6 +1,6 @@
 {
   "name": "cloudstore-client",
-  "description": "Client library for Cloud Store",
+  "description": "Client library for CloudStore",
   "version": "0.0.1",
   "private": true,
   "scripts": {

@@ -4,7 +4,7 @@ http    = require 'http'
 uuid    = require 'node-uuid'
 config  = require './config'
 
-describe 'Cloud Store API', ->
+describe 'CloudStore API', ->
   TEST_NAMESPACE = "/__tests__/#{uuid.v4()}"
   USERID = uuid.v4()
   TOKEN = uuid.v4()

@@ -1,26 +1,26 @@
-Cloud Fabric is an open source stack to make scalable, real-time apps on top of a network of personal data stores.
+Zephyr is an open source stack to make scalable, real-time apps on top of a network of personal data stores.
 
 # Status
 
-**Cloud Fabric is a new project in its infancy but moving quickly.**
+**Zephyr is a new project in its infancy but moving quickly.**
 
-Core components of Cloud Fabric were developed for [Connect.Me](http://connect.me), are production grade, and will be available in Github soon.
+Core components of Zephyr were developed for [Connect.Me](http://connect.me), are production grade, and will be available in Github soon.
 
-We're building Cloud Fabric so that we can more quickly build other apps off of a common framework.
+We're building Zephyr so that we can more quickly build other apps off of a common framework.
 We also needed a reference implementation for a PDS endpoint to make PDSs interoperable.
 
-The [CloudStore](https://github.com/respectio/cloudfabric/wiki/CloudStore-API) is functional. 
+The [CloudStore](https://github.com/airships/zephyr/wiki/CloudStore-API) is functional.
 All other components are in the early stages of specing and documenting but are small in scope and should be available in Feb, 2013.
 
-* [CloudStore](https://github.com/respectio/cloudfabric/wiki/CloudStore-API): GET/PUT/DELETE supported, REPLACE is WIP
+* [CloudStore](https://github.com/airships/zephyr/wiki/CloudStore-API): GET/PUT/DELETE supported, REPLACE is WIP
 * Sharding: WIP
-* Tests: basic Cloud Store mocha tests complete
+* Tests: basic CloudStore mocha tests complete
 * Router: WIP
 * Engines: XDI Engine in progress
 
 # Overview
 
-Cloud Fabric is a collection of modular components that interact via HTTP APIs.
+Zephyr is a collection of modular components that interact via HTTP APIs.
 
 **Components:**
 
@@ -28,19 +28,19 @@ Cloud Fabric is a collection of modular components that interact via HTTP APIs.
 2. CloudStore: data store with OAuth security layer and real-time event notifications
 3. Engines + XDI: automatic networking and syncing with other personal data stores
 
-![Cloud Fabric Architecture](https://raw.github.com/respectio/cloudfabric/master/doc/images/cloudfabric_arch.png)
+![Zephyr Architecture](https://raw.github.com/respectio/cloudfabric/master/doc/images/cloudfabric_arch.png)
 
 
 
 # Philosophy
 
-Cloud Fabric can run as a lightweight personal cloud server to manage a single user's personal data or as a scalable app server framework.
+Zephyr can run as a lightweight personal cloud server to manage a single user's personal data or as a scalable app server framework.
 
-With Cloud Fabric, you can easily create apps in HTML and JavaScript without the need to write server code. However, as your app complexity grows, you can add server-side logic in any language.
+With Zephyr, you can easily create apps in HTML and JavaScript without the need to write server code. However, as your app complexity grows, you can add server-side logic in any language.
 
-As a philosophy, Cloud Fabric is less of a traditional framework and more of a set of interoperable service APIs. The services talk to each other on an internal network and expose one external endpoint for communication with apps and other Cloud Fabric servers. Any service can be exchanged or customized without affect to the other services as long as the APIs remain the same.
+As a philosophy, Zephyr is less of a traditional framework and more of a set of interoperable service APIs. The services talk to each other on an internal network and expose one external endpoint for communication with apps and other Zephyr servers. Any service can be exchanged or customized without affect to the other services as long as the APIs remain the same.
 
-The code provided in the repository is meant to eventually serve as a fully functional, production ready server. However, any server or component that conforms to the Cloud Fabric API will be linked to from this document.
+The code provided in the repository is meant to eventually serve as a fully functional, production ready server. However, any server or component that conforms to the Zephyr API will be linked to from this document.
 
 [Read background](#background) section for more details.
 
@@ -49,7 +49,7 @@ The code provided in the repository is meant to eventually serve as a fully func
 
 # Installation
 
-    git clone https://github.com/respectio/cloudfabric.git
+    git clone https://github.com/airships/zephyr.git
 
 
 **Requirements**
@@ -64,7 +64,7 @@ The code provided in the repository is meant to eventually serve as a fully func
     brew install postgres
     brew install nodejs
     npm install -g mocha
-    
+
 **Debian**
 
 For Erlang, follow instructions at https://www.erlang-solutions.com/downloads/download-erlang-otp
@@ -87,23 +87,23 @@ Edit config/base to change database settings, HTTP port, etc. then apply config 
     ./apply_config.sh
     make
 
-[Learn more](https://github.com/respectio/cloudfabric/wiki/Configuration) in the wiki.
+[Learn more](https://github.com/airships/zephyr/wiki/Configuration) in the wiki.
 
 
 # Services
 
-The Cloud Fabric stack is composed of several modular services that talk to each other over HTTP APIs.
+The Zephyr stack is composed of several modular services that talk to each other over HTTP APIs.
 
-## Cloud Store
+## CloudStore
 
 **Create Postgres Database**
 
     $ cd cloudstore/db
     $ ./init.sh
 
-Cloud Store provides a RESTful API for storing and retrieving data.
+CloudStore provides a RESTful API for storing and retrieving data.
 
-**Start Cloud Store**
+**Start CloudStore**
 
     $ ./cloudstore/rel/cloudstore/bin/cloudstore console
 
@@ -114,7 +114,7 @@ In browser or curl, GET [http://127.0.0.1:10002/*](http://127.0.0.1:10002/*) whi
 
     $ curl --request PUT --header "Content-Type: application/json" --data "{\"\":\"rw\"}" --verbose http://127.0.0.1:10002/tokens/SECRET
 
-Interact with Cloud Store...
+Interact with CloudStore...
 
 **PUT**
 
@@ -128,7 +128,7 @@ Interact with Cloud Store...
 
     curl --header "Cookie: token=SECRET" --request DELETE --verbose http://127.0.0.1:10002/foo/bar/baz
 
-Note that PUT is a merge operation for objects. 
+Note that PUT is a merge operation for objects.
 This makes it easy for clients to update specific attributes of an existing object without needing to send the entire object.
 
     curl --data "{\"foo\":\"bar\"}" --request PUT --header "Content-Type: application/json, Cookie: token=SECRET" --verbose http://127.0.0.1:10002/foo/bar/baz
@@ -143,20 +143,20 @@ This makes it easy for clients to update specific attributes of an existing obje
 
 To replace the entire object, use REPLACE or do a DELETE then PUT.
 
-[Cloud Store API Documenation](https://github.com/respectio/cloudfabric/wiki/CloudStore-API)
+[CloudStore API Documenation](https://github.com/airships/zephyr/wiki/CloudStore-API)
 
 
 # Tests
 
 API tests are written in [mocha](http://visionmedia.github.com/mocha/)
 
-**Run Cloud Store Tests**
+**Run CloudStore Tests**
 
     cd cloudstore
     npm install
     npm test
 
-[Learn more](https://github.com/respectio/cloudfabric/wiki/Testing) in the wiki.
+[Learn more](https://github.com/airships/zephyr/wiki/Testing) in the wiki.
 
 
 # Background
@@ -168,13 +168,13 @@ Additionally, the app developer must manually support each 3rd party data provid
 ![Traditional App Architecture](https://raw.github.com/respectio/cloudfabric/master/doc/images/app_arch_traditional.png)
 
 
-Cloud Fabric's Personal Data Store architecture puts users back in control of their data while making it easier for developers to create data rich and scalable apps.
+Zephyr's Personal Data Store architecture puts users back in control of their data while making it easier for developers to create data rich and scalable apps.
 In an ideal PDS architecture, user data is proxied through the user's PDS.
 This enables auto-caching of data, a signle API endpoint for personal data, and a distributed architecture similar to email.
-![Cloud Fabric App Architecture](https://raw.github.com/respectio/cloudfabric/master/doc/images/app_arch_cloudfabric.png)
+![Zephyr App Architecture](https://raw.github.com/respectio/cloudfabric/master/doc/images/app_arch_cloudfabric.png)
 
-While Cloud Fabric's ideal architecture uses the PDS as the user's single API data endpoint, almost any hybrid configuration is possible.
-The main purpose of Cloud Fabric is to make it easy to permission and manage distributed personal data.
+While Zephyr's ideal architecture uses the PDS as the user's single API data endpoint, almost any hybrid configuration is possible.
+The main purpose of Zephyr is to make it easy to permission and manage distributed personal data.
 As PDSs become more interoperable, more and more apps' architecture will look like the ideal diagram.
 
 
