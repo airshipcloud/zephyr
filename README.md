@@ -1,75 +1,55 @@
-### Zephyr: OAuth + Firebase + Pub/Sub + Discovery
-
 **zeph·yr** _noun_
 * ~~a breeze from the west~~
 * **a lightweight fabric**
 
+12345678901234567890123456789012345678901234567890123456789012345678901234567890
 
-Zephyr is a lightweight personal cloud framework that makes it easy to build
+**Zephyr is a lightweight personal cloud framework** that makes it easy to build
 scalable, real-time apps powered by personal data.
 
-A personal cloud is a relatively new term. In concept, it's a server that
-provides authentication and access to a user's personal data. Think of Facebook
-and Dropbox as personal clouds. Each one provides some form of authentication
+_Personal cloud_ is a relatively new term. In concept, it's a server that
+provides authentication and access to a user's personal data. Think of
+[Facebook](https://www.facebook.com) and [Dropbox](https://www.dropbox.com/)
+as proto-personal clouds. Each one provides some form of authentication
 and an API for fetching and storing data on behalf of the user. The problem
 with existing proto-personal clouds is that they are neither standardized nor
 portable which means it's not ideal for users and more work for app developers
-to integrate. [Learn more](https://github.com/airships/zephyr/wiki/Personal-Clouds)
+to integrate.
+
+[Learn more](https://github.com/airships/zephyr/wiki/Personal-Clouds)
 about Personal Clouds.
 
-The goal of Zephyr is to create a simple personal cloud framework that provides
-a set of standardized APIs for authenticating, fetching, normalizing, storing,
-and sharing personal data between personal clouds and within a scalable app
-architecture.
+**The goal of Zephyr** is to create a simple personal cloud framework that
+provides standardized APIs for authenticating, fetching, normalizing,
+storing, and sharing data between personal clouds and within a scalable
+app architecture.
 
 
+## Status
 
-# Status
+**Zephyr is a new project** but moving quickly to solve real world dev problems.
 
-**Zephyr is a new project in its infancy but moving quickly.**
+* **CloudStore** – supports token based authentication, GET, PUT, DELETE
+* **Tests**
+* **Example Apps** – WIP
+* **3rd Party API Support** – WIP
+  * [planned] [Singly](http://singly.com) for fetching social and personal data
+  * [planned] [remoteStorage](http://remotestorage.io) for unhosted apps
+ 
 
-We're building Zephyr so that we can more quickly build other apps off of a common framework.
-We also needed a reference implementation for a PDS endpoint to make PDSs interoperable.
+## Components
 
-The [CloudStore](https://github.com/airships/zephyr/wiki/CloudStore-API) is functional.
-All other components are in the early stages of specing and documenting but are small in scope and should be available in Feb, 2013.
-
-* [CloudStore](https://github.com/airships/zephyr/wiki/CloudStore-API): GET/PUT/DELETE supported, REPLACE is WIP
-* Sharding: WIP
-* Tests: basic CloudStore mocha tests complete
-* Router: WIP
-* Engines: XDI Engine in progress
-
-# Overview
-
-Zephyr is a collection of modular components that interact via HTTP APIs.
+**Zephyr is composed of several modular components** that interact via HTTP APIs.
 
 **Components:**
 
-1. Router: API endpoint that routes requests to engines
-2. CloudStore: data store with OAuth security layer and real-time event notifications
-3. Engines + XDI: automatic networking and syncing with other personal data stores
-
-![Zephyr Architecture](https://raw.github.com/respectio/cloudfabric/master/doc/images/cloudfabric_arch.png)
-
+1. Router: API endpoint that routes requests to other components
+2. CloudStore: key/value data store with OAuth security layer and notification events
+3. Pub/Sub: webhook callback engine for distributed event notification
+4. Engines: pluggable components to fetch social data, provide additional services, etc.
 
 
-# Philosophy
-
-Zephyr can run as a lightweight personal cloud server to manage a single user's personal data or as a scalable app server framework.
-
-With Zephyr, you can easily create apps in HTML and JavaScript without the need to write server code. However, as your app complexity grows, you can add server-side logic in any language.
-
-As a philosophy, Zephyr is less of a traditional framework and more of a set of interoperable service APIs. The services talk to each other on an internal network and expose one external endpoint for communication with apps and other Zephyr servers. Any service can be exchanged or customized without affect to the other services as long as the APIs remain the same.
-
-The code provided in the repository is meant to eventually serve as a fully functional, production ready server. However, any server or component that conforms to the Zephyr API will be linked to from this document.
-
-[Read background](#background) section for more details.
-
-
-
-
-# Installation
+## Installation
 
     git clone https://github.com/airships/zephyr.git
 
@@ -101,8 +81,7 @@ For PostgreSQL 9.1+ on Debian Squeeze, install from [backports](http://backports
 
 
 
-
-# Configuration
+## Configuration
 
 Edit config/base to change database settings, HTTP port, etc. then apply config and compile.
 
@@ -111,13 +90,6 @@ Edit config/base to change database settings, HTTP port, etc. then apply config 
 
 [Learn more](https://github.com/airships/zephyr/wiki/Configuration) in the wiki.
 
-
-# Services
-
-The Zephyr stack is composed of several modular services that talk to each other over HTTP APIs.
-
-## CloudStore
-
 **Create Postgres Database**
 
     $ cd cloudstore/db
@@ -125,18 +97,24 @@ The Zephyr stack is composed of several modular services that talk to each other
 
 CloudStore provides a RESTful API for storing and retrieving data.
 
+
+## Running
+
 **Start CloudStore**
 
     $ ./cloudstore/rel/cloudstore/bin/cloudstore console
-
-In browser or curl, GET [http://127.0.0.1:10002/*](http://127.0.0.1:10002/*) which should return an empty JSON object.
-
 
 **Add Auth Token**
 
     $ curl --request PUT --header "Content-Type: application/json" --data "{\"\":\"rw\"}" --verbose http://127.0.0.1:10002/tokens/SECRET
 
-Interact with CloudStore...
+
+In browser or curl, GET [http://127.0.0.1:10002/*](http://127.0.0.1:10002/*?token=SECRET) which should return an empty JSON object.
+
+The token can be passed in as a cookie or query param.
+
+
+## Interact with CloudStore
 
 **PUT**
 
@@ -168,7 +146,7 @@ To replace the entire object, use REPLACE or do a DELETE then PUT.
 [CloudStore API Documenation](https://github.com/airships/zephyr/wiki/CloudStore-API)
 
 
-# Tests
+## Tests
 
 API tests are written in [mocha](http://visionmedia.github.com/mocha/)
 
@@ -178,25 +156,7 @@ API tests are written in [mocha](http://visionmedia.github.com/mocha/)
     npm install
     npm test
 
-[Learn more](https://github.com/airships/zephyr/wiki/Testing) in the wiki.
+[Learn more](https://github.com/airships/zephyr/wiki/Testing).
 
-
-# Background
-<a id="background"></a>
-
-Traditional apps are built around centralized servers with connectors to fetch data from other services.
-If a user wishes to create a backup of app data, he/she must manually export the data to a personal data store (PDS) or harddrive.
-Additionally, the app developer must manually support each 3rd party data provider.
-![Traditional App Architecture](https://raw.github.com/respectio/cloudfabric/master/doc/images/app_arch_traditional.png)
-
-
-Zephyr's Personal Data Store architecture puts users back in control of their data while making it easier for developers to create data rich and scalable apps.
-In an ideal PDS architecture, user data is proxied through the user's PDS.
-This enables auto-caching of data, a signle API endpoint for personal data, and a distributed architecture similar to email.
-![Zephyr App Architecture](https://raw.github.com/respectio/cloudfabric/master/doc/images/app_arch_cloudfabric.png)
-
-While Zephyr's ideal architecture uses the PDS as the user's single API data endpoint, almost any hybrid configuration is possible.
-The main purpose of Zephyr is to make it easy to permission and manage distributed personal data.
-As PDSs become more interoperable, more and more apps' architecture will look like the ideal diagram.
 
 
