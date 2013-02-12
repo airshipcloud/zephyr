@@ -13,6 +13,15 @@ app.get('/auth', (req, res) ->
   res.redirect(redirectUrl + "?uid=#{uid}&token=#{token}")
 )
 
+app.get('/auth_test', (req, res) ->
+  uid = uuid()
+  token = uuid()
+  setToken(uid, token)
+
+  res.write("uid=#{uid}\ntoken=#{token}")
+  res.end()
+)
+
 httpOptions = (method, path, cookie = null, json = null) ->
   ret = {
     host: config.DOMAIN
@@ -31,10 +40,8 @@ setToken = (uid, token) ->
   auth["/users/#{uid}"] = 'rw'
   json = JSON.stringify(auth)
   req = http.request(httpOptions('PUT', "/tokens/#{token}", null, json), (res) ->
-    assert.equal 204, res.statusCode
     res.on 'data', (chunk) ->
       assert.equal Object.keys(JSON.parse(chunk)).length, 0
-    done()
   )
   req.on 'error', (e) ->
     throw new Error(e)
