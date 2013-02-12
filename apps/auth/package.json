@@ -7,6 +7,7 @@
     "start": "coffee app.coffee"
   },
   "dependencies": {
-    "express": "3.x"
+    "express": "3.x",
+    "node-uuid": ""
   }
 }
