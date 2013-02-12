@@ -2,12 +2,10 @@
 * ~~a breeze from the west~~
 * **a lightweight fabric**
 
-12345678901234567890123456789012345678901234567890123456789012345678901234567890
-
 **Zephyr is a lightweight personal cloud framework** that makes it easy to build
 scalable, real-time apps powered by personal data.
 
-_Personal cloud_ is a relatively new term. In concept, it's a server that
+Personal cloud is a relatively new term. In concept, it's a server that
 provides authentication and access to a user's personal data. Think of
 [Facebook](https://www.facebook.com) and [Dropbox](https://www.dropbox.com/)
 as proto-personal clouds. Each one provides some form of authentication
@@ -25,17 +23,21 @@ storing, and sharing data between personal clouds and within a scalable
 app architecture.
 
 
+
 ## Status
 
-**Zephyr is a new project** but moving quickly to solve real world dev problems.
+**Zephyr is a new project** but moving quickly to solve real world app developer problems.
 
 * **CloudStore** – supports token based authentication, GET, PUT, DELETE
-* **Tests**
+* **Tests** – basic coverage for CloudStore
 * **Example Apps** – WIP
 * **3rd Party API Support** – WIP
-  * [planned] [Singly](http://singly.com) for fetching social and personal data
-  * [planned] [remoteStorage](http://remotestorage.io) for unhosted apps
+  * [Singly](http://singly.com) for fetching social and personal data
+  * [remoteStorage](http://remotestorage.io) for unhosted apps
+  * social connectors for Facebook, Twitter, LinkedIn, etc.
+  * calendar connectors for Gmail, IMAP, etc.
  
+
 
 ## Components
 
@@ -43,10 +45,12 @@ app architecture.
 
 **Components:**
 
-1. Router: API endpoint that routes requests to other components
-2. CloudStore: key/value data store with OAuth security layer and notification events
-3. Pub/Sub: webhook callback engine for distributed event notification
-4. Engines: pluggable components to fetch social data, provide additional services, etc.
+1. **[Router](https://github.com/airships/zephyr/wiki/Routes):** API endpoint that routes requests to other components
+2. **[CloudStore](https://github.com/airships/zephyr/wiki/CloudStore-API):** 
+   key/value data store with OAuth security layer and notification events
+3. **Pub/Sub:** webhook callback engine for distributed event notification
+4. **Engines:** pluggable components to fetch social data, provide additional services, etc.
+
 
 
 ## Installation
@@ -98,6 +102,7 @@ Edit config/base to change database settings, HTTP port, etc. then apply config 
 CloudStore provides a RESTful API for storing and retrieving data.
 
 
+
 ## Running
 
 **Start CloudStore**
@@ -114,7 +119,8 @@ In browser or curl, GET [http://127.0.0.1:10002/*](http://127.0.0.1:10002/*?toke
 The token can be passed in as a cookie or query param.
 
 
-## Interact with CloudStore
+
+## Interacting with CloudStore
 
 **PUT**
 
@@ -146,7 +152,8 @@ To replace the entire object, use REPLACE or do a DELETE then PUT.
 [CloudStore API Documenation](https://github.com/airships/zephyr/wiki/CloudStore-API)
 
 
-## Tests
+
+## Testing
 
 API tests are written in [mocha](http://visionmedia.github.com/mocha/)
 
@@ -159,4 +166,10 @@ API tests are written in [mocha](http://visionmedia.github.com/mocha/)
 [Learn more](https://github.com/airships/zephyr/wiki/Testing).
 
 
+
+## Troubleshooting & Support
+
+If you run into a problem, just drop a note in the [Google+ Community](https://plus.google.com/u/1/communities/107361427153729973121).
+
+Also refer to the [Troubleshooting](https://github.com/airships/zephyr/wiki/Troubleshooting) wiki page.
 
