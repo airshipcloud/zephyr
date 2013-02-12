@@ -6,8 +6,10 @@
     "test": "mocha --compilers coffee:coffee-script -R spec"
   },
   "dependencies": {
+    "mocha": "1.x",
     "assert": "*",
     "chai": "*",
-    "node-uuid": "1.x"
+    "node-uuid": "1.x",
+    "coffee-script": "1.x"
   }
 }

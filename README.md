@@ -36,7 +36,7 @@ app architecture.
   * [remoteStorage](http://remotestorage.io) for unhosted apps
   * social connectors for Facebook, Twitter, LinkedIn, etc.
   * calendar connectors for Gmail, IMAP, etc.
- 
+
 
 
 ## Components
@@ -46,7 +46,7 @@ app architecture.
 **Components:**
 
 1. **[Router](https://github.com/airships/zephyr/wiki/Routes):** API endpoint that routes requests to other components
-2. **[CloudStore](https://github.com/airships/zephyr/wiki/CloudStore-API):** 
+2. **[CloudStore](https://github.com/airships/zephyr/wiki/CloudStore-API):**
    key/value data store with OAuth security layer and notification events
 3. **Pub/Sub:** webhook callback engine for distributed event notification
 4. **Engines:** pluggable components to fetch social data, provide additional services, etc.
@@ -69,7 +69,6 @@ app architecture.
     brew install erlang
     brew install postgres
     brew install nodejs
-    npm install -g mocha
 
 **Debian**
 
@@ -81,7 +80,6 @@ For PostgreSQL 9.1+ on Debian Squeeze, install from [backports](http://backports
     apt-get install postgresql-contrib-9.1
     apt-get nodejs
     apt-get npm
-    npm install -g mocha
 
 
 
