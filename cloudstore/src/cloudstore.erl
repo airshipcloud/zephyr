@@ -36,12 +36,23 @@ malformed_request(Req, State) ->
 allowed_methods(Req, State) ->
     {[<<"GET">>, <<"PUT">>, <<"DELETE">>], Req, State}.
 
+read_token(Req) ->
+    {Token0, Req0} = cowboy_req:qs_val(<<"token">>, Req),
+    case Token0 of
+        undefined ->
+            {Token1, Req1} = cowboy_req:cookie(<<"token">>, Req0),
+            case Token1 of
+                true -> undefined;
+                _ -> {Token1, Req1}
+            end;
+        _ ->
+            {Token0, Req0}
+    end.
+
 forbidden(Req, #state{segments = Segments} = State) ->
-    {Token, Req0} = cowboy_req:cookie(<<"token">>, Req),
+    {Token, Req0} = read_token(Req),
     case Token of
         undefined ->
-            {true, Req0, State};
-        true ->
             {true, Req0, State};
         _ ->
             Q = <<"select access from tokens where path <@ hstore($1::text[]) and id=$2">>,

@@ -9,6 +9,7 @@
 -export([content_types_accepted/2]).
 -export([read_json/2]).
 -export([write_json/2]).
+-export([delete_resource/2]).
 
 -record(state, {token, acl}).
 
@@ -62,3 +63,8 @@ write_json(Req, #state{token = Token} = State) ->
         {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Token, path_to_hprops(Path), Access])
     end, Props),
     {true, Req0, State}.
+
+delete_resource(Req, #state{token = Token} = State) ->
+    Q = <<"delete from tokens where id=$1">>,
+    {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Token]),
+    {true, Req, State}.
