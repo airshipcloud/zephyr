@@ -25,8 +25,8 @@ app architecture.
 Support is being added to Zephyr for both existing personal data sources
 (Facebook, Dropbox, Gmail, etc.) as well as fully compliant personal clouds.
 
-Zephyr is designed to be used either as your app's backend **or** as a personal
-data cache layer for your existing apps.
+Zephyr is designed to be used either as **your app's backend** or as a
+**personal data cache layer** for your existing apps.
 
 
 
