@@ -183,3 +183,18 @@ If you run into a problem, just drop a note in the [Google+ Community](https://p
 
 Also refer to the [Troubleshooting](https://github.com/airships/zephyr/wiki/Troubleshooting) wiki page.
 
+
+
+## Documentation
+
+[API and reference](https://github.com/airships/zephyr/wiki) documentation are in the wiki.
+
+
+
+## Contributing
+
+Join the [Google+ Community](https://plus.google.com/u/1/communities/107361427153729973121) or submit a pull request.
+
+We especially appreciate hearing about your app ideas and how we can help make your life easier as a developer.
+
+
