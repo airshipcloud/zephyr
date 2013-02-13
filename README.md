@@ -124,7 +124,7 @@ CloudStore provides a RESTful API for storing and retrieving data.
     $ curl --request PUT --header "Content-Type: application/json" --data "{\"\":\"rw\"}" --verbose http://127.0.0.1:10002/tokens/SECRET
 
 
-In browser or curl, GET [http://127.0.0.1:10002/*](http://127.0.0.1:10002/*?token=SECRET) which should return an empty JSON object.
+In browser or curl, GET [http://127.0.0.1:10002/*?token=SECRET](http://127.0.0.1:10002/*?token=SECRET) which should return an empty JSON object.
 
 The token can be passed in as a cookie or query param.
 
