@@ -5,6 +5,8 @@
 **Zephyr is a lightweight personal cloud framework** that makes it easy to build
 scalable, real-time apps powered by personal data.
 
+**OAuth** + **Firebase** + **Pub/Sub** + **Discovery**
+
 Personal cloud is a relatively new term. In concept, it's a server that
 provides authentication and access to a user's personal data. Think of
 [Facebook](https://www.facebook.com) and [Dropbox](https://www.dropbox.com/)
@@ -56,6 +58,10 @@ Zephyr is designed to be used either as **your app's backend** or as a
    key/value data store with OAuth security layer and notification events
 3. **Pub/Sub:** webhook callback engine for distributed event notification
 4. **Engines:** pluggable components to fetch social data, provide additional services, etc.
+
+Each component is defined by a RESTful API and is completely replaceable by anything that provides the same API.
+Most components run behind a firewall and talk to each other on the internal network.
+Components can be spread out across any number of servers or run on a single server.
 
 
 
