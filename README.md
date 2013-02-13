@@ -22,6 +22,12 @@ provides standardized APIs for authenticating, fetching, normalizing,
 storing, and sharing data between personal clouds and within a scalable
 app architecture.
 
+Support is being added to Zephyr for both existing personal data sources
+(Facebook, Dropbox, Gmail, etc.) as well as fully compliant personal clouds.
+
+Zephyr is designed to be used either as **your app's backend** or as a
+**personal data cache layer** for your existing apps.
+
 
 
 ## Status
@@ -50,6 +56,10 @@ app architecture.
    key/value data store with OAuth security layer and notification events
 3. **Pub/Sub:** webhook callback engine for distributed event notification
 4. **Engines:** pluggable components to fetch social data, provide additional services, etc.
+
+Each component is defined by a RESTful API and is completely replaceable by anything that provides the same API.
+Most components run behind a firewall and talk to each other on the internal network.
+Components can be spread out across any number of servers or run on a single server.
 
 
 
@@ -112,7 +122,7 @@ CloudStore provides a RESTful API for storing and retrieving data.
     $ curl --request PUT --header "Content-Type: application/json" --data "{\"\":\"rw\"}" --verbose http://127.0.0.1:10002/tokens/SECRET
 
 
-In browser or curl, GET [http://127.0.0.1:10002/*](http://127.0.0.1:10002/*?token=SECRET) which should return an empty JSON object.
+In browser or curl, GET [http://127.0.0.1:10002/*?token=SECRET](http://127.0.0.1:10002/*?token=SECRET) which should return an empty JSON object.
 
 The token can be passed in as a cookie or query param.
 
@@ -170,4 +180,19 @@ API tests are written in [mocha](http://visionmedia.github.com/mocha/)
 If you run into a problem, just drop a note in the [Google+ Community](https://plus.google.com/u/1/communities/107361427153729973121).
 
 Also refer to the [Troubleshooting](https://github.com/airships/zephyr/wiki/Troubleshooting) wiki page.
+
+
+
+## Documentation
+
+[API and reference](https://github.com/airships/zephyr/wiki) documentation are in the wiki.
+
+
+
+## Contributing
+
+Join the [Google+ Community](https://plus.google.com/u/1/communities/107361427153729973121) or submit a pull request.
+
+We especially appreciate hearing about your app ideas and how we can help make your life easier as a developer.
+
 
