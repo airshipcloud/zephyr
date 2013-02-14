@@ -7,11 +7,26 @@
     <script src='zephyr.js' type="text/javascript"></script>
     <script type="text/javascript">
         $(function () {
-            var chatRef = new ZephyrBase('a', 'x', 'chat');
+            var chatRef = new ZephyrBase('a', 'x', 'chat2');
             chatRef.onchange = function (chat) {
+                var html = '';
+                for (var i = 0; i < chat.msgs.length; ++i) {
+                    html += '<p>' + chat.msgs[i] + '</p>';
+                }
+                $('#msgs').html(html);
             };
             $('#submit').click(function () {
+                var msg = $('#msg').val();
                 $('#msg').val('');
+                chatRef.putSafe(function(chat) {
+                    if (chat) {
+                        chat.msgs.push(msg);
+                    }
+                    else {
+                        chat = { msgs: [msg] };
+                    }
+                    return chat;
+                });
             });
         });
     </script>

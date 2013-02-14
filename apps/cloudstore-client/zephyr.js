@@ -13,7 +13,7 @@ var ZephyrBase = function (uid, token, path) {
             data: JSON.stringify(data),
             //xhrFields: { withCredentials: true }, -- we don't need this until we need to pass cookies
             beforeSend: function (req) {
-                req.setRequestHeader("if-match", self.etag);
+                //req.setRequestHeader("if-match", self.etag);
             },
             success: function () {
                 // refresh etag
