@@ -97,7 +97,7 @@ You'll likely need to install [Postgres](http://www.postgresql.org/download/linu
 [Erlang](https://www.erlang-solutions.com/downloads/download-erlang-otp), and 
 [Node.js](http://nodejs.org/download/) from source.
 
-If you're using an AWS EC2 RedHat instance, you can "yum install postgresql9-server" 
+If you're using an AWS EC2 RedHat instance, you can "yum install postgresql9-server postgresql9-contrib" 
 and then manually install Erlang and Node.js.
 
 
