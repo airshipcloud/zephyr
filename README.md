@@ -91,6 +91,15 @@ For PostgreSQL 9.1+ on Debian Squeeze, install from [backports](http://backports
     apt-get nodejs
     apt-get npm
 
+**CentOS**
+
+You'll likely need to install [Postgres](http://www.postgresql.org/download/linux/redhat/), 
+[Erlang](https://www.erlang-solutions.com/downloads/download-erlang-otp), and 
+[Node.js](http://nodejs.org/download/) from source.
+
+If you're using an AWS EC2 RedHat instance, you can "yum install postgresql9-server" 
+and then manually install Erlang and Node.js.
+
 
 
 ## Configuration
