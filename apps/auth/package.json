@@ -4,10 +4,12 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "coffee app.coffee"
+    "_start": "coffee app.coffee",
+    "start": "node simple_express2.js"
   },
   "dependencies": {
     "express": "3.x",
-    "node-uuid": ""
+    "node-uuid": "1.4.x",
+    "oauth2-provider": "1.x"
   }
 }
