@@ -10,16 +10,25 @@ start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 rest() ->
-    RestDispatch = cowboy_router:compile([{'_', [
-        {"/tokens/[:token]", cloudstore_tokens, []},
+    Dispatch = cowboy_router:compile([{'_', [
         {"/auth", cloudstore_auth, []},
         {'_', cloudstore, []}
     ]}]),
     {ok, Port} = application:get_env(cloudstore, port),
-    RestConfig = [rest_listener, 100,
+    Config = [rest_listener, 100,
         [{port, Port}],
-        [{env, [{dispatch, RestDispatch}]}]],
-    {rest, {cowboy, start_http, RestConfig}, permanent, 5000, supervisor, [dynamic]}.
+        [{env, [{dispatch, Dispatch}]}]],
+    {rest, {cowboy, start_http, Config}, permanent, 5000, supervisor, [dynamic]}.
+
+tokens() ->
+    Dispatch = cowboy_router:compile([{'_', [
+        {"/tokens/[:token]", cloudstore_tokens, []}
+    ]}]),
+    {ok, Port} = application:get_env(cloudstore, tokenstore_port),
+    Config = [tokenstore_listener, 100,
+        [{port, Port}, {ip, "127.0.0.1"}],
+        [{env, [{dispatch, Dispatch}]}]],
+    {rest, {cowboy, start_http, Config}, permanent, 5000, supervisor, [dynamic]}.
 
 init([]) ->
     Pool = poolboy:child_spec(cloudstore_pool,
@@ -35,5 +44,5 @@ init([]) ->
             {username, "cf_cloudstore"},
             {password, "dhY8AGhJ3Z"}
         ]),
-    {ok, { {one_for_one, 5, 10}, [Pool, rest()]} }.
+    {ok, { {one_for_one, 5, 10}, [Pool, rest(), tokens()]} }.
 
