@@ -1,4 +1,5 @@
 rel/cloudstore
+rel/files/sys.config
 ebin
 deps
 db/roles.sql

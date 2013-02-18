@@ -25,9 +25,10 @@ tokens() ->
         {"/tokens/[:token]", cloudstore_tokens, []}
     ]}]),
     {ok, Port} = application:get_env(cloudstore, tokenstore_port),
+    {ok, IP} = application:get_env(cloudstore, tokenstore_ip),
     Config = [tokenstore_listener, 100,
         [
-            {ip, {127, 0, 0, 1}},
+            {ip, IP},
             {port, Port}
         ],
         [{env, [{dispatch, Dispatch}]}]],

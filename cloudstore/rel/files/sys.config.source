@@ -19,7 +19,8 @@
     {cloudstore, [
         {origin, <<"@@CLOUDSTORE_ORIGIN@@">>},
         {port, @@CLOUDSTORE_PORT@@},
-        {tokenstore_port, @@TOKENSTORE_PORT@@}
+        {tokenstore_port, @@TOKENSTORE_PORT@@},
+        {tokenstore_ip, @@TOKENSTORE_IP@@}
     ]}
 ].
 
