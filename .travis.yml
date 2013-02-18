@@ -1,6 +1,6 @@
 language: erlang
 otp_release:
-  - R14B03
+  - R15B03
 
 before_script:
   - ./apply_config.sh
