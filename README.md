@@ -174,6 +174,9 @@ To replace the entire object, use REPLACE or do a DELETE then PUT.
 
 ## Testing
 
+[Travis CI](https://travis-ci.org/airships/zephyr)
+![Travis CI](https://api.travis-ci.org/airships/zephyr.png)
+
 API tests are written in Node.js [mocha](http://visionmedia.github.com/mocha/)
 
 **Run Tests**
