@@ -26,9 +26,12 @@ tokens() ->
     ]}]),
     {ok, Port} = application:get_env(cloudstore, tokenstore_port),
     Config = [tokenstore_listener, 100,
-        [{port, Port}, {ip, "127.0.0.1"}],
+        [
+            {ip, {127, 0, 0, 1}},
+            {port, Port}
+        ],
         [{env, [{dispatch, Dispatch}]}]],
-    {rest, {cowboy, start_http, Config}, permanent, 5000, supervisor, [dynamic]}.
+    {tokens, {cowboy, start_http, Config}, permanent, 5000, supervisor, [dynamic]}.
 
 init([]) ->
     Pool = poolboy:child_spec(cloudstore_pool,
@@ -44,5 +47,7 @@ init([]) ->
             {username, "cf_cloudstore"},
             {password, "dhY8AGhJ3Z"}
         ]),
-    {ok, { {one_for_one, 5, 10}, [Pool, rest(), tokens()]} }.
+        Rest = rest(),
+        Tokens = tokens(),
+    {ok, { {one_for_one, 5, 10}, [Pool, Rest, Tokens]} }.
 
