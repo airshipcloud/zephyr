@@ -50,5 +50,3 @@ IFS="
         done
     fi
 done
-
-exit 0
