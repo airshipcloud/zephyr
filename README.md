@@ -93,11 +93,11 @@ For PostgreSQL 9.1+ on Debian Squeeze, install from [backports](http://backports
 
 **CentOS**
 
-You'll likely need to install [Postgres](http://www.postgresql.org/download/linux/redhat/), 
-[Erlang](https://www.erlang-solutions.com/downloads/download-erlang-otp), and 
+You'll likely need to install [Postgres](http://www.postgresql.org/download/linux/redhat/),
+[Erlang](https://www.erlang-solutions.com/downloads/download-erlang-otp), and
 [Node.js](http://nodejs.org/download/) from source.
 
-If you're using an AWS EC2 RedHat instance, you can "yum install postgresql9-server postgresql9-contrib" 
+If you're using an AWS EC2 RedHat instance, you can "yum install postgresql9-server postgresql9-contrib"
 and then manually install Erlang and Node.js.
 
 
@@ -174,13 +174,16 @@ To replace the entire object, use REPLACE or do a DELETE then PUT.
 
 ## Testing
 
-API tests are written in [mocha](http://visionmedia.github.com/mocha/)
+[![Build Status](https://api.travis-ci.org/airships/zephyr.png)](https://travis-ci.org/airships/zephyr)
 
-**Run CloudStore Tests**
+API tests are written in Node.js [mocha](http://visionmedia.github.com/mocha/)
 
-    cd cloudstore
-    npm install
-    npm test
+**Run Tests**
+
+    make test
+
+The CloudStore must be already running for the tests to pass. Tests are run against the same database
+as development but on a guaranteed unique test branch that is deleted at the end of the tests.
 
 [Learn more](https://github.com/airships/zephyr/wiki/Testing).
 
