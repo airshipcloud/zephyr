@@ -54,7 +54,7 @@ Zephyr is designed to be used either as **your app's backend** or as a
 1. **[Router](https://github.com/airships/zephyr/wiki/Routes):** API endpoint that routes requests to other components
 2. **[CloudStore](https://github.com/airships/zephyr/wiki/CloudStore-API):**
    key/value data store with OAuth security layer and notification events
-3. **Pub/Sub:** webhook callback engine for distributed event notification
+3. **[Pub/Sub](https://github.com/airships/zephyr/wiki/PubSub-API):** webhook callback engine for distributed event notification
 4. **Engines:** pluggable components to fetch social data, provide additional services, etc.
 
 Each component is defined by a RESTful API and is completely replaceable by anything that provides the same API.
