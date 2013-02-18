@@ -6,6 +6,6 @@ before_script:
   - ./apply_config.sh
   - cd cloudstore/db; ./init.sh; cd ../..
   - make
-  - ./cloudstore/rel/cloudstore/bin/cloudstore console
+  - ./cloudstore/rel/cloudstore/bin/cloudstore console &
 
 script: make test
