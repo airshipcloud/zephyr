@@ -220,17 +220,19 @@ as development but on a guaranteed unique test branch that is deleted at the end
 
 
 
-## Troubleshooting & Support
-
-If you run into a problem, just drop a note in the [Google+ Community](https://plus.google.com/u/1/communities/107361427153729973121).
-
-Also refer to the [Troubleshooting](https://github.com/airships/zephyr/wiki/Troubleshooting) wiki page.
-
-
-
 ## Documentation
 
 [API and reference](https://github.com/airships/zephyr/wiki) documentation are in the wiki.
+
+
+
+## Troubleshooting & Support
+
+* [**Google+ Community**](https://plus.google.com/u/1/communities/107361427153729973121) – get quick answers from the community
+* [**Troubleshooting**](https://github.com/airships/zephyr/wiki/Troubleshooting) – wiki page for common issues
+
+Erlang compilation errors (usually rebar errors) are typically caused by having the wrong version of Erlang/OTP installed.
+Refer to [**Troubleshooting**](https://github.com/airships/zephyr/wiki/Troubleshooting) for help.
 
 
 
