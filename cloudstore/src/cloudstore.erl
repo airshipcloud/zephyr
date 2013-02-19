@@ -166,6 +166,10 @@ delete_resource(Req, #state{access = Access, mode = pointer, hash = Hash} = Stat
     Q = <<"delete from objects where hash=$1">>,
     {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Hash]),
     {true, Req, State};
+delete_resource(Req, #state{access = Access, mode = expr, hashes = Hashes} = State) when Access =:= <<"rw">> ->
+    Q = <<"delete from objects where hash=any($1::text[])">>,
+    {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Hashes]),
+    {true, Req, State};
 delete_resource(Req, State) ->
     {ok, Req0} = cowboy_req:reply(403, Req),
     {halt, Req0, State}.
