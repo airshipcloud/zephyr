@@ -4,6 +4,6 @@ otp_release:
 
 before_script:
   - make setup
-  - ./start.sh &
+  - ./start.sh -d
 
 script: make test
