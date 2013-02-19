@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# -*- tab-width:4;indent-tabs-mode:nil -*-
+# ex: ts=4 sw=4 et
+
+# while getopts "d" option; do
+#   case "${option}" in
+#     d) DETACH=1;;
+#   esac
+# done
+
+case "$1" in
+
+    start)
+        ./cloudstore/rel/cloudstore/bin/cloudstore start
+        ;;
+
+    stop)
+        ./cloudstore/rel/cloudstore/bin/cloudstore stop
+        ;;
+
+    restart)
+        ./cloudstore/rel/cloudstore/bin/cloudstore restart
+        ;;
+
+    console)
+        ./cloudstore/rel/cloudstore/bin/cloudstore console
+        ;;
+esac

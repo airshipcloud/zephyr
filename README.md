@@ -105,7 +105,7 @@ and then manually install Erlang and Node.js.
 ## Quick Start
 
     make setup
-    ./start.sh &
+    script/zephyr start
     make test
 
 This will apply the default configuration, compile Erlang code, setup the database, start the services, and run the tests.
@@ -128,13 +128,21 @@ Then restart CloudStore.
 
 **Start**
 
-    ./start.sh
+Run the console in the foreground...
 
-This will start the CloudStore Erlang console.
+    script/zephyr console
+
+Or run as a daemon...
+
+    script/zephyr start
 
 **Stop**
 
-Exit the CloudStore console.
+    script/zephyr start
+
+**Restart**
+
+    script/zephyr restart
 
 
 

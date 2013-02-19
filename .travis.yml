@@ -4,6 +4,6 @@ otp_release:
 
 before_script:
   - make setup
-  - ./start.sh -d
+  - script/zephyr start
 
 script: make test
