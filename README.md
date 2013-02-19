@@ -102,44 +102,63 @@ and then manually install Erlang and Node.js.
 
 
 
+## Quick Start
+
+   make setup
+   ./start.sh &
+   make test
+
+This will apply the default configuration, compile Erlang code, setup the database, start the services, and run the tests.
+
+
+
 ## Configuration
 
-Edit config/base to change database settings, HTTP port, etc. then apply config and compile.
+Edit config/base to change database settings, HTTP port, etc. then reapply config and recompile with make.
 
-    ./apply_config.sh
     make
 
-[Learn more](https://github.com/airships/zephyr/wiki/Configuration) in the wiki.
+Then restart CloudStore.
 
-**Create Postgres Database**
-
-    $ cd cloudstore/db
-    $ ./init.sh
-
-CloudStore provides a RESTful API for storing and retrieving data.
+[Config documentation](https://github.com/airships/zephyr/wiki/Configuration)
 
 
 
-## Running
+## Start & Stopping Services
 
-**Start CloudStore**
+**Start**
 
-    $ ./cloudstore/rel/cloudstore/bin/cloudstore console
+    ./start.sh
 
-**Add Auth Token**
+This will start the CloudStore Erlang console.
 
-    $ curl --request PUT --header "Content-Type: application/json" --data "{\"\":\"rw\"}" --verbose http://127.0.0.1:10002/tokens/SECRET
+**Stop**
 
-
-In browser or curl, GET [http://127.0.0.1:10002/*?token=SECRET](http://127.0.0.1:10002/*?token=SECRET) which should return an empty JSON object.
-
-The token can be passed in as a cookie or query param.
+Exit the CloudStore console.
 
 
 
 ## Interacting with CloudStore
 
-The token can be passed as a query param or a cookie.
+When CloudStore is started, it starts two services:
+
+1. CloudStore API
+2. CloudStore Token Service
+
+The API provides RESTful access to data. The Token Service allows for the creation and deletion of access tokens.
+For security reasons, the Token Service runs on a different port and would typically listen on localhost or an internal IP address in production where the API would listen on a public interface.
+
+
+**Add Auth Token**
+
+An auth token is required to access data in the CloudStore.
+
+    $ curl --request PUT --header "Content-Type: application/json" --data "{\"\":\"rw\"}" --verbose http://127.0.0.1:10004/tokens/SECRET
+
+In browser or curl, GET [http://127.0.0.1:10002/*?token=SECRET](http://127.0.0.1:10002/*?token=SECRET) which should return an empty JSON object.
+
+The token can be passed in as a cookie or query param.
+
 
 **PUT**
 

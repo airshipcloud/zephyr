@@ -3,9 +3,7 @@ otp_release:
   - R15B03
 
 before_script:
-  - ./apply_config.sh
-  - cd cloudstore/db; ./init.sh; cd ../..
-  - make
-  - ./cloudstore/rel/cloudstore/bin/cloudstore console &
+  - make setup
+  - ./start.sh &
 
 script: make test
