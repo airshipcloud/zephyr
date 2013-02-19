@@ -83,7 +83,10 @@ Components can be spread out across any number of servers or run on a single ser
 
 1. [Install Erlang R15B03](https://www.erlang-solutions.com/downloads/download-erlang-otp) manually
 2. [Add backports](http://backports-master.debian.org/Instructions/) to apt-get sources
-3. Install Node.js and packages...
+3. Run commands to install Node.js and packages
+
+
+Install...
 
     # install node.js
     sudo apt-get update && sudo apt-get install git-core curl build-essential openssl libssl-dev
