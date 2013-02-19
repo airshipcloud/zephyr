@@ -14,6 +14,8 @@ describe 'CloudStore API', ->
   after ->
     req = http.request(httpOptions('DELETE', "#{TEST_NAMESPACE}"))
     req.end()
+    req = http.request(tokenHttpOptions('DELETE', "/tokens/#{TOKEN}"))
+    req.end()
 
   user =
     username    : 'Bilbo Baggins'
@@ -22,7 +24,7 @@ describe 'CloudStore API', ->
     lastName    : 'Baggins'
 
   httpOptions = (method, path, cookie = null, json = null) ->
-    ret = {
+    opts = {
       host: config.DOMAIN
       port: config.PORT
       path: path
@@ -30,9 +32,15 @@ describe 'CloudStore API', ->
       headers:
         'Content-Type': 'application/json'
     }
-    ret['headers']['Content-Length'] = json.length if json
-    ret['headers']['Cookie'] = cookie if cookie
-    ret
+    opts['headers']['Content-Length'] = json.length if json
+    opts['headers']['Cookie'] = cookie if cookie
+    opts
+
+  tokenHttpOptions = (method, path, cookie = null, json = null) ->
+    opts = httpOptions(method, path, cookie, json)
+    opts.host = config.TOKEN_DOMAIN
+    opts.port = config.TOKEN_PORT
+    opts
 
   assertEmpty = ->
     it 'should retrieve an empty object', (done) ->
@@ -43,22 +51,18 @@ describe 'CloudStore API', ->
           assert.equal Object.keys(JSON.parse(chunk)).length, 0
         done()
       )
-      req.on 'error', (e) ->
-        done()
       req.end()
 
   it 'should set auth token', (done) ->
     auth = {}
     auth["#{TEST_NAMESPACE}/users/#{USERID}"] = 'rw'
     json = JSON.stringify(auth)
-    req = http.request(httpOptions('PUT', "/tokens/#{TOKEN}", null, json), (res) ->
+    req = http.request(tokenHttpOptions('PUT', "/tokens/#{TOKEN}", null, json), (res) ->
       assert.equal 204, res.statusCode
       res.on 'data', (chunk) ->
         assert.equal Object.keys(JSON.parse(chunk)).length, 0
       done()
     )
-    req.on 'error', (e) ->
-      done()
     req.write json
     req.end()
 
@@ -72,8 +76,6 @@ describe 'CloudStore API', ->
         assert.equal Object.keys(JSON.parse(chunk)).length, 0
       done()
     )
-    req.on 'error', (e) ->
-      done()
     req.write json
     req.end()
 
@@ -92,8 +94,6 @@ describe 'CloudStore API', ->
 
       done()
     )
-    req.on 'error', (e) ->
-      done()
     req.end()
 
   it 'should delete an object', (done) ->
@@ -101,8 +101,13 @@ describe 'CloudStore API', ->
       assert.equal 204, res.statusCode
       done()
     )
-    req.on 'error', (e) ->
-      done()
     req.end()
 
   assertEmpty()
+
+  it 'should revoke token', (done) ->
+    req = http.request(tokenHttpOptions('DELETE', "/tokens/#{TOKEN}"), (res) ->
+      assert.equal 204, res.statusCode
+      done()
+    )
+    req.end()
