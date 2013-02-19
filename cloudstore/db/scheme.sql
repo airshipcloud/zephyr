@@ -6,3 +6,6 @@ create index "objects_value" on "objects" using gist ("value");
 
 create table "tokens"("id" text not null, "path" hstore not null, "access" text not null);
 create unique index "tokens_id_path" on "tokens" ("id", "path");
+
+create table "subs"("id" text not null, "path" hstore not null, "callback" text not null);
+create unique index "subs_id_path" on "subs" ("id", "path");

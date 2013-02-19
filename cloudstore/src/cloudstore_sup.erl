@@ -12,6 +12,7 @@ start_link() ->
 rest() ->
     Dispatch = cowboy_router:compile([{'_', [
         {"/auth", cloudstore_auth, []},
+        {"/subscriptions/[:sub_id]", cloudstore_subs, []},
         {'_', cloudstore, []}
     ]}]),
     {ok, Port} = application:get_env(cloudstore, port),
