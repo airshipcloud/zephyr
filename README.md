@@ -84,7 +84,7 @@ Components can be spread out across any number of servers or run on a single ser
 
 **Debian 6 (Squeeze)**
 
-1. [Install Erlang](https://www.erlang-solutions.com/downloads/download-erlang-otp) manually
+1. [Install Erlang R15B03](https://www.erlang-solutions.com/downloads/download-erlang-otp) manually
 2. [Add backports](http://backports-master.debian.org/Instructions/) to apt-get sources
 3. Install packages
 
