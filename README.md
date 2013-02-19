@@ -82,11 +82,11 @@ Components can be spread out across any number of servers or run on a single ser
     brew install postgres
     brew install nodejs
 
-**Debian**
+**Debian 6 (Squeeze)**
 
-For Erlang, follow instructions at https://www.erlang-solutions.com/downloads/download-erlang-otp
-
-For PostgreSQL 9.1+ on Debian Squeeze, install from [backports](http://backports-master.debian.org/Instructions/).
+1. [Install Erlang](https://www.erlang-solutions.com/downloads/download-erlang-otp) manually
+2. [Add backports](http://backports-master.debian.org/Instructions/) to apt-get sources
+3. Install packages...
 
     apt-get -t squeeze-backports install postgresql-9.1
     apt-get install postgresql-contrib-9.1
