@@ -1,3 +1,5 @@
+[![Build Status](https://api.travis-ci.org/airships/zephyr.png)](https://travis-ci.org/airships/zephyr)
+
 **zeph·yr** _noun_
 * ~~a breeze from the west~~
 * **a lightweight fabric**
@@ -202,8 +204,6 @@ To replace the entire object, use REPLACE or do a DELETE then PUT.
 
 
 ## Testing
-
-[![Build Status](https://api.travis-ci.org/airships/zephyr.png)](https://travis-ci.org/airships/zephyr)
 
 API tests are written in Node.js [mocha](http://visionmedia.github.com/mocha/)
 
