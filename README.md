@@ -104,9 +104,9 @@ and then manually install Erlang and Node.js.
 
 ## Quick Start
 
-   make setup
-   ./start.sh &
-   make test
+    make setup
+    ./start.sh &
+    make test
 
 This will apply the default configuration, compile Erlang code, setup the database, start the services, and run the tests.
 
