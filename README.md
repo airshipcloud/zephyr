@@ -118,7 +118,9 @@ Edit config/base to change database settings, HTTP port, etc. then reapply confi
 
     make
 
-Then restart CloudStore.
+Then restart Zephyr.
+
+    script/zephyr restart
 
 [Config documentation](https://github.com/airships/zephyr/wiki/Configuration)
 
@@ -209,7 +211,7 @@ API tests are written in Node.js [mocha](http://visionmedia.github.com/mocha/)
 
     make test
 
-The CloudStore must be already running for the tests to pass. Tests are run against the same database
+Zephyr must be already running for the tests to pass. Tests are run against the same database
 as development but on a guaranteed unique test branch that is deleted at the end of the tests.
 
 [Learn more](https://github.com/airships/zephyr/wiki/Testing).
