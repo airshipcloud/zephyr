@@ -90,8 +90,8 @@ For PostgreSQL 9.1+ on Debian Squeeze, install from [backports](http://backports
 
     apt-get -t squeeze-backports install postgresql-9.1
     apt-get install postgresql-contrib-9.1
-    apt-get nodejs
-    apt-get npm
+    apt-get install nodejs
+    apt-get install npm
 
 **CentOS**
 
