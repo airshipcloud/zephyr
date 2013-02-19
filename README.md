@@ -67,9 +67,6 @@ Components can be spread out across any number of servers or run on a single ser
 
 ## Installation
 
-    git clone https://github.com/airships/zephyr.git
-
-
 **Requirements**
 
 * [Erlang R15B03](https://www.erlang-solutions.com/downloads/download-erlang-otp) – for core framework components
@@ -86,14 +83,34 @@ Components can be spread out across any number of servers or run on a single ser
 
 1. [Install Erlang R15B03](https://www.erlang-solutions.com/downloads/download-erlang-otp) manually
 2. [Add backports](http://backports-master.debian.org/Instructions/) to apt-get sources
-3. Install packages
+3. Install Node.js and packages...
 
-Packages:
+    # install node.js
+    sudo apt-get update && sudo apt-get install git-core curl build-essential openssl libssl-dev
+    git clone https://github.com/joyent/node.git
+    cd node
+    git checkout v0.8.20
+    ./configure --openssl-libpath=/usr/lib/ssl
+    make
+    sudo make install
+    # verify installation
+    node -v
+    npm -v
 
+    # install postgres
     sudo apt-get -t squeeze-backports install postgresql-9.1
     sudo apt-get -t squeeze-backports install postgresql-contrib-9.1
-    sudo apt-get install nodejs
-    sudo apt-get install npm
+    
+    # edit 
+    sudo vim /etc/postgresql/9.1/main/pg_hba.conf
+    # change methods for postgres and local to "trust"
+    # local   all   postgres      trust    
+    # local   all   all           trust
+    # host    all   127.0.0.1/32  trust
+    # host    all   ::1/128       trust
+
+    # start postgres
+    sudo service postgresql start
 
 **CentOS**
 
@@ -108,6 +125,10 @@ and then manually install Erlang and Node.js.
 
 ## Quick Start
 
+Make sure PostgreSQL is running, then...
+
+    git clone https://github.com/airships/zephyr.git
+    cd zephyr
     make setup
     script/zephyr start
     make test
