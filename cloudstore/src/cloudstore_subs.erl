@@ -21,7 +21,7 @@ rest_init(Req, _Opts) ->
     {ok, cloudstore_security:add_cors(Req), #state{}}.
 
 path_to_hprops(Path) ->
-    Segments = [case Segment of "*" -> {expr, star}; _ -> list_to_binary(Segment) end || Segment <- string:subs(binary_to_list(Path), "/")],
+    Segments = [case Segment of "*" -> {expr, star}; _ -> list_to_binary(Segment) end || Segment <- string:tokens(binary_to_list(Path), "/")],
     lists:append(lists:foldl(fun({expr, star}, R) -> [[] | R]; (Value, R) -> [[list_to_binary(integer_to_list(length(R))), Value] | R] end, [], Segments)).
 
 hprops_to_path(HProps) ->
