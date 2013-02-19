@@ -7,10 +7,10 @@ all clean: apply_config
 	done
 
 apply_config:
-	script/apply_config.sh
+	script/apply_config
 
 setup: clean all
-	script/init.sh
+	script/init
 
 test:
 	cd cloudstore; npm install; npm test
