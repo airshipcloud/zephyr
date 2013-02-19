@@ -90,10 +90,10 @@ Components can be spread out across any number of servers or run on a single ser
 
 Packages:
 
-    apt-get -t squeeze-backports install postgresql-9.1
-    apt-get -t squeeze-backports install postgresql-contrib-9.1
-    apt-get install nodejs
-    apt-get install npm
+    sudo apt-get -t squeeze-backports install postgresql-9.1
+    sudo apt-get -t squeeze-backports install postgresql-contrib-9.1
+    sudo apt-get install nodejs
+    sudo apt-get install npm
 
 **CentOS**
 
