@@ -86,10 +86,12 @@ Components can be spread out across any number of servers or run on a single ser
 
 1. [Install Erlang](https://www.erlang-solutions.com/downloads/download-erlang-otp) manually
 2. [Add backports](http://backports-master.debian.org/Instructions/) to apt-get sources
-3. Install packages...
+3. Install packages
+
+Packages:
 
     apt-get -t squeeze-backports install postgresql-9.1
-    apt-get install postgresql-contrib-9.1
+    apt-get -t squeeze-backports install postgresql-contrib-9.1
     apt-get install nodejs
     apt-get install npm
 
