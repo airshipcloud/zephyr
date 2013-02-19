@@ -140,7 +140,7 @@ Or run as a daemon...
 
 **Stop**
 
-    script/zephyr start
+    script/zephyr stop
 
 **Restart**
 
@@ -148,15 +148,15 @@ Or run as a daemon...
 
 
 
-## Interacting with CloudStore
+## Interacting with Data
 
-When CloudStore is started, it starts two services:
+When the CloudStore component is started, it starts two services:
 
 1. CloudStore API
 2. CloudStore Token Service
 
 The API provides RESTful access to data. The Token Service allows for the creation and deletion of access tokens.
-For security reasons, the Token Service runs on a different port and would typically listen on localhost or an internal IP address in production where the API would listen on a public interface.
+For security reasons, the Token Service listens on a different port and (optionally) network interface.
 
 
 **Add Auth Token**
