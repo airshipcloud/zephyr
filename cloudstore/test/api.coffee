@@ -105,9 +105,17 @@ describe 'CloudStore API', ->
 
   assertEmpty()
 
-  it 'should revoke token', (done) ->
+  it 'should not allow access after revoking token', (done) ->
     req = http.request(tokenHttpOptions('DELETE', "/tokens/#{TOKEN}"), (res) ->
       assert.equal 204, res.statusCode
       done()
     )
     req.end()
+
+  it 'should not allow GET', (done) ->
+    req = http.request(httpOptions('GET', "#{TEST_NAMESPACE}/users/#{USERID}", COOKIE), (res) ->
+      assert.equal 403, res.statusCode
+      done()
+    )
+    req.end()
+
