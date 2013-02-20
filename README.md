@@ -67,62 +67,14 @@ Components can be spread out across any number of servers or run on a single ser
 
 ## Installation
 
-**Requirements**
-
-* [Erlang R15B03](https://www.erlang-solutions.com/downloads/download-erlang-otp) – for core framework components
-* [Postgres 9.1+](http://www.postgresql.org/) with [hstore extension](http://www.postgresql.org/docs/9.1/static/hstore.html) – for CloudStore
-* [Node.JS](http://nodejs.org/) – (optional) for tests and compiling JavaScript client libaries
-
-**OSX**
+**Quick Install OSX**
 
     brew install erlang
     brew install postgres
+    # See Install Guide for postgres config
     brew install nodejs
 
-**Debian 6 (Squeeze)**
-
-1. [Install Erlang R15B03](https://www.erlang-solutions.com/downloads/download-erlang-otp) manually
-2. [Add backports](http://backports-master.debian.org/Instructions/) to apt-get sources
-3. Install Node.js and packages...
-
-```
-# install node.js
-sudo apt-get update && sudo apt-get install git-core curl build-essential openssl libssl-dev
-git clone https://github.com/joyent/node.git
-cd node
-git checkout v0.8.20
-./configure --openssl-libpath=/usr/lib/ssl
-make
-sudo make install
-# verify installation
-node -v
-npm -v
-
-# install postgres
-sudo apt-get -t squeeze-backports install postgresql-9.1
-sudo apt-get -t squeeze-backports install postgresql-contrib-9.1
-
-# edit 
-sudo vim /etc/postgresql/9.1/main/pg_hba.conf
-# change methods for postgres and local to "trust"
-# local   all   postgres      trust    
-# local   all   all           trust
-# host    all   127.0.0.1/32  trust
-# host    all   ::1/128       trust
-
-# start postgres
-sudo service postgresql start
-```
-
-**CentOS**
-
-You'll likely need to install [Postgres](http://www.postgresql.org/download/linux/redhat/),
-[Erlang](https://www.erlang-solutions.com/downloads/download-erlang-otp), and
-[Node.js](http://nodejs.org/download/) from source.
-
-If you're using an AWS EC2 RedHat instance, you can "yum install postgresql9-server postgresql9-contrib"
-and then manually install Erlang and Node.js.
-
+[Install Guide](https://github.com/airships/zephyr/wiki/Install) for installing on Linux
 
 
 ## Quick Start
