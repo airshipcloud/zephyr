@@ -74,7 +74,7 @@ Components can be spread out across any number of servers or run on a single ser
     # See Install Guide for postgres config
     brew install nodejs
 
-[Install Guide](https://github.com/airships/zephyr/wiki/Install) for installing on Linux
+[Install Guide](https://github.com/airships/zephyr/wiki/Install) for Linux and install details
 
 
 ## Quick Start
@@ -101,7 +101,7 @@ Then restart Zephyr.
 
     script/zephyr restart
 
-[Config documentation](https://github.com/airships/zephyr/wiki/Configuration)
+[Config Guide](https://github.com/airships/zephyr/wiki/Configuration)
 
 
 
