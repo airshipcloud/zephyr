@@ -11,7 +11,8 @@
                   cowboy,
                   jiffy,
                   epgsql,
-                  poolboy
+                  poolboy,
+                  lhttpc
                  ]},
   {mod, { cloudstore_app, []}},
   {env, []}
