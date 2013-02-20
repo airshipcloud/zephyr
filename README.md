@@ -32,22 +32,22 @@ Zephyr is designed to be used either as **your app's backend** or as a
 
 
 
-## Status
+## PROJECT STATUS
 
 **Zephyr is a new project** but moving quickly to solve real world app developer problems.
 
-* **CloudStore** – supports token based authentication, GET, PUT, DELETE
-* **Tests** – basic coverage for CloudStore
-* **Example Apps** – WIP
-* **3rd Party API Support** – WIP
-  * [Singly](http://singly.com) for fetching social and personal data
-  * [remoteStorage](http://remotestorage.io) for unhosted apps
-  * social connectors for Facebook, Twitter, LinkedIn, etc.
-  * calendar connectors for Gmail, IMAP, etc.
+* **Router** – config and basic router [done]
+* **CloudStore** – token based authentication, GET, PUT, DELETE [done]
+* **Tests** – basic coverage for CloudStore [done]
+* **Example Apps** – Chat [done], data browser [WIP]
+* **3rd Party API Support**
+  * [Singly](http://singly.com) for fetching social and personal data [WIP]
+  * [remoteStorage](http://remotestorage.io) for unhosted apps [WIP]
+  * connectors for Dropbox, Facebook, Twitter, Gmail, etc. [not started]
 
 
 
-## Components
+## ARCHITECTURE OVERVIEW
 
 **Zephyr is composed of several modular components** that interact via HTTP APIs.
 
@@ -65,7 +65,17 @@ Components can be spread out across any number of servers or run on a single ser
 
 
 
-## Installation
+## REQUIREMENTS
+
+[Erlang R15B03+](https://www.erlang-solutions.com/downloads/download-erlang-otp) – high-performance core components
+[Postgres 9.1+](http://www.postgresql.org/) with [hstore extension](http://www.postgresql.org/docs/9.1/static/hstore.html) – data store
+[Node.js 0.8+](http://nodejs.org/) – apps, tests, client libraries, etc.
+
+Zephyr runs on OSX and Linux. Windows has not yet been tested.
+
+
+
+## INSTALLATION
 
 **OSX Quick Install**
 
@@ -77,10 +87,11 @@ brew install nodejs
 # see Install Guide for postgres pg_hba.conf issues
 ```
 
-[Install Guide](https://github.com/airships/zephyr/wiki/Install) for Linux and details
+[Install Guide](https://github.com/airships/zephyr/wiki/Install) for Linux and detailed instructions
 
 
-## Quick Start
+
+## QUICK START
 
 ```bash
 # make sure postgres is already running
@@ -94,7 +105,7 @@ make test
 
 
 
-## Configuration
+## CONFIGURATION
 
 Configuration options are in [config directory](https://github.com/airships/zephyr/tree/master/config) files.
 When an option is changed, recompile and restart services.
@@ -110,7 +121,7 @@ script/zephyr restart
 
 
 
-## Start & Stop
+## RUNNING
 
 ```bash
 
@@ -128,20 +139,21 @@ script/zephyr restart
 ```
 
 
-## Interacting with Data
 
-When the CloudStore component is started, it starts two services:
+## DATA API OVERVIEW
 
-1. CloudStore API
-2. CloudStore Token Service
+When Zephyr starts, it runs two data services:
 
-The API provides RESTful access to data. The Token Service allows for the creation and deletion of access tokens.
+1. Data API
+2. Token Service
+
+The Data API provides RESTful access to data. The Token Service allows for the creation and deletion of access tokens.
 For security reasons, the Token Service listens on a different port and (optionally) network interface.
 
 
 **Add Auth Token**
 
-An auth token is required to access data in the CloudStore.
+An auth token is required to access data.
 
 ```bash
 curl --request PUT --header "Content-Type: application/json" --data "{\"\":\"rw\"}" --verbose http://127.0.0.1:10004/tokens/SECRET
@@ -187,11 +199,11 @@ curl --verbose http://127.0.0.1:10002/foo/bar/baz?token=SECRET
 
 To replace the entire object, use REPLACE or do a DELETE then PUT.
 
-[CloudStore API Documenation](https://github.com/airships/zephyr/wiki/CloudStore-API)
+[Data API Documenation](https://github.com/airships/zephyr/wiki/CloudStore-API)
 
 
 
-## Testing
+## TESTING
 
 API tests are written in Node.js [mocha](http://visionmedia.github.com/mocha/)
 
@@ -207,13 +219,13 @@ as development but on a guaranteed unique test branch that is deleted at the end
 
 
 
-## Documentation
+## DOCUMENTATION
 
 [API and Reference](https://github.com/airships/zephyr/wiki) documentation are in the wiki.
 
 
 
-## Troubleshooting & Support
+## TROUBLESHOOTING & COMMUNITY SUPPORT
 
 * [**Google+ Community**](https://plus.google.com/u/1/communities/107361427153729973121) – get quick answers from the community
 * [**Troubleshooting**](https://github.com/airships/zephyr/wiki/Troubleshooting) – wiki page for common issues
@@ -223,7 +235,7 @@ Refer to [**Troubleshooting**](https://github.com/airships/zephyr/wiki/Troublesh
 
 
 
-## Contributing
+## CONTRIBUTING
 
 Join the [Google+ Community](https://plus.google.com/u/1/communities/107361427153729973121) or submit a pull request.
 
