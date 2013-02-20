@@ -14,7 +14,7 @@
 -export([write_json/2]).
 -export([delete_resource/2]).
 
--record(state, {path, segments, hash, hashes, etag, mode, access}).
+-record(state, {path, segments, hash, hashes, etag, mode, access, callbacks}).
 
 init(_Transport, _Req, _Opts) ->
     {upgrade, protocol, cowboy_rest}.
@@ -61,12 +61,16 @@ forbidden(Req, #state{segments = Segments} = State) ->
         undefined ->
             {true, Req0, State};
         _ ->
-            Q = <<"select access from tokens where path <@ hstore($1::text[]) and id=$2">>,
-            case cloudstore_pg:equery(cloudstore_pool, Q, [segments_to_hprops(Segments), Token]) of
+            HProps = segments_to_hprops(Segments),
+            Q0 = <<"select access from tokens where path <@ hstore($1::text[]) and id=$2">>,
+            case cloudstore_pg:equery(cloudstore_pool, Q0, [HProps, Token]) of
                 {ok, _, []} ->
                     {true, Req0, State};
                 {ok, _, [{Access}]} ->
-                    {false, Req0, State#state{access = Access}}
+                    Q1 = <<"select callback from subs where path <@ hstore($1::text[])">>,
+                    {ok, _, R} = cloudstore_pg:equery(cloudstore_pool, Q1, [HProps]),
+                    Callbacks = [Callback || {Callback} <- R],
+                    {false, Req0, State#state{access = Access, callbacks = Callbacks}}
             end
     end.
 
@@ -145,6 +149,9 @@ props_to_hprops(Props) ->
 segments_to_hprops(Segments) ->
     lists:append(lists:foldl(fun({expr, star}, R) -> [[] | R]; (Value, R) -> [[list_to_binary(integer_to_list(length(R))), Value] | R] end, [], Segments)).
 
+fire_callbacks(#state{callbacks = Callbacks}) ->
+    io:format("~p~n", [Callbacks]).
+
 write_json(Req, #state{access = Access, mode = pointer, hash = undefined, path = Path, segments = Segments} = State) when Access =:= <<"rw">> ->
     {ok, Json, Req0} = cowboy_req:body(Req),
     Props = case jiffy:decode(Json) of
@@ -153,6 +160,7 @@ write_json(Req, #state{access = Access, mode = pointer, hash = undefined, path =
     end,
     Q = <<"insert into objects(hash,version,path,value) values (md5($1),0,hstore($2::text[]),hstore($3::text[]))">>,
     {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Path, segments_to_hprops(Segments), props_to_hprops(Props)]),
+    ok = fire_callbacks(State),
     {true, Req0, State};
 write_json(Req, #state{access = Access, mode = pointer, hash = Hash} = State) when Access =:= <<"rw">> ->
     {ok, Json, Req0} = cowboy_req:body(Req),
@@ -160,6 +168,7 @@ write_json(Req, #state{access = Access, mode = pointer, hash = Hash} = State) wh
     HProps = lists:append([[Name, jiffy:encode(Value)] || {Name, Value} <- Props]),
     Q = <<"update objects set version=version+1,value=value||hstore($2::text[]) where hash=$1">>,
     {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Hash, HProps]),
+    ok = fire_callbacks(State),
     {true, Req0, State};
 write_json(Req, State) ->
     {ok, Req0} = cowboy_req:reply(403, Req),
