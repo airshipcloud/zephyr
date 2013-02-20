@@ -147,7 +147,10 @@ segments_to_hprops(Segments) ->
 
 write_json(Req, #state{access = Access, mode = pointer, hash = undefined, path = Path, segments = Segments} = State) when Access =:= <<"rw">> ->
     {ok, Json, Req0} = cowboy_req:body(Req),
-    {Props} = jiffy:decode(Json),
+    Props = case jiffy:decode(Json) of
+        [] -> [];
+        {V} -> V
+    end,
     Q = <<"insert into objects(hash,version,path,value) values (md5($1),0,hstore($2::text[]),hstore($3::text[]))">>,
     {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Path, segments_to_hprops(Segments), props_to_hprops(Props)]),
     {true, Req0, State};
