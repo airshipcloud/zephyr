@@ -195,20 +195,21 @@ To replace the entire object, use REPLACE or do a DELETE then PUT.
 
 API tests are written in Node.js [mocha](http://visionmedia.github.com/mocha/)
 
-**Run Tests**
-
-    make test
+```bash
+# run tests
+make test
+```
 
 Zephyr must be already running for the tests to pass. Tests are run against the same database
 as development but on a guaranteed unique test branch that is deleted at the end of the tests.
 
-[Learn more](https://github.com/airships/zephyr/wiki/Testing).
+[Testing Guide](https://github.com/airships/zephyr/wiki/Testing).
 
 
 
 ## Documentation
 
-[API and reference](https://github.com/airships/zephyr/wiki) documentation are in the wiki.
+[API and Reference](https://github.com/airships/zephyr/wiki) documentation are in the wiki.
 
 
 
