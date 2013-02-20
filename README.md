@@ -67,9 +67,9 @@ Components can be spread out across any number of servers or run on a single ser
 
 ## REQUIREMENTS
 
-* [Erlang R15B03+](https://www.erlang-solutions.com/downloads/download-erlang-otp) – high-performance core components
-* [Postgres 9.1+](http://www.postgresql.org/) with [hstore extension](http://www.postgresql.org/docs/9.1/static/hstore.html) – data store
-* [Node.js 0.8+](http://nodejs.org/) – apps, tests, client libraries, etc.
+* [Erlang R15B03+](https://www.erlang-solutions.com/downloads/download-erlang-otp) for high-performance core components
+* [Postgres 9.1+](http://www.postgresql.org/) with [hstore extension](http://www.postgresql.org/docs/9.1/static/hstore.html) for data store
+* [Node.js 0.8+](http://nodejs.org/) for apps, tests, client libraries, etc.
 
 Zephyr runs on OSX and Linux. Windows has not yet been tested.
 
