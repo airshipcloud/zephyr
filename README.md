@@ -67,64 +67,65 @@ Components can be spread out across any number of servers or run on a single ser
 
 ## Installation
 
-**Quick Install OSX**
+**OSX Quick Install**
 
-    brew install erlang
-    brew install postgres
-    # See Install Guide for postgres config
-    brew install nodejs
+```bash
+brew install erlang
+brew install postgres
+brew install nodejs
 
-[Install Guide](https://github.com/airships/zephyr/wiki/Install) for Linux and install details
+# see Install Guide for postgres pg_hba.conf issues
+```
+
+[Install Guide](https://github.com/airships/zephyr/wiki/Install) for Linux and details
 
 
 ## Quick Start
 
-Make sure PostgreSQL is running, then...
+```bash
+# make sure postgres is already running
 
-    git clone https://github.com/airships/zephyr.git
-    cd zephyr
-    make setup
-    script/zephyr start
-    make test
-
-This will apply the default configuration, compile Erlang code, setup the database, start the services, and run the tests.
+git clone https://github.com/airships/zephyr.git
+cd zephyr
+make setup
+script/zephyr start
+make test
+```
 
 
 
 ## Configuration
 
-Edit config/base to change database settings, HTTP port, etc. then reapply config and recompile with make.
+Configuration options are in [config directory](https://github.com/airships/zephyr/tree/master/config) files.
+When an option is changed, recompile and restart services.
 
-    make
+```bash
+# reapply config and recompile
+make
+# restart services
+script/zephyr restart
+```
 
-Then restart Zephyr.
-
-    script/zephyr restart
-
-[Config Guide](https://github.com/airships/zephyr/wiki/Configuration)
+[Config Guide](https://github.com/airships/zephyr/wiki/Configuration) for options and details
 
 
 
-## Start & Stopping Services
+## Start & Stop
 
-**Start**
+```bash
 
-Run the console in the foreground...
+# start console in foreground
+script/zephyr console
 
-    script/zephyr console
+# start as service
+script/zephyr start
 
-Or run as a daemon...
+# stop service
+script/zephyr stop
 
-    script/zephyr start
-
-**Stop**
-
-    script/zephyr stop
-
-**Restart**
-
-    script/zephyr restart
-
+# restart service
+script/zephyr restart
+```
 
 
 ## Interacting with Data
@@ -142,7 +143,9 @@ For security reasons, the Token Service listens on a different port and (optiona
 
 An auth token is required to access data in the CloudStore.
 
-    $ curl --request PUT --header "Content-Type: application/json" --data "{\"\":\"rw\"}" --verbose http://127.0.0.1:10004/tokens/SECRET
+```bash
+curl --request PUT --header "Content-Type: application/json" --data "{\"\":\"rw\"}" --verbose http://127.0.0.1:10004/tokens/SECRET
+```
 
 In browser or curl, GET [http://127.0.0.1:10002/*?token=SECRET](http://127.0.0.1:10002/*?token=SECRET) which should return an empty JSON object.
 
@@ -151,28 +154,36 @@ The token can be passed in as a cookie or query param.
 
 **PUT**
 
-    curl --data "{\"foo\":\"bar\"}" --request PUT --header "Content-Type: application/json" --verbose http://127.0.0.1:10002/foo/bar/baz?token=SECRET
+```bash
+curl --data "{\"foo\":\"bar\"}" --request PUT --header "Content-Type: application/json" --verbose http://127.0.0.1:10002/foo/bar/baz?token=SECRET
+```
 
 **GET**
 
-    curl --verbose http://127.0.0.1:10002/foo/bar/baz?token=SECRET
+```bash
+curl --verbose http://127.0.0.1:10002/foo/bar/baz?token=SECRET
+```
 
 **DELETE**
 
-    curl --request DELETE --verbose http://127.0.0.1:10002/foo/bar/baz?token=SECRET
+```bash
+curl --request DELETE --verbose http://127.0.0.1:10002/foo/bar/baz?token=SECRET
+```
 
 Note that PUT is a merge operation for objects.
 This makes it easy for clients to update specific attributes of an existing object without needing to send the entire object.
 
-    curl --data "{\"foo\":\"bar\"}" --request PUT --header "Content-Type: application/json" --verbose http://127.0.0.1:10002/foo/bar/baz?token=SECRET
-    curl --data "{\"new\":\"bar\"}" --request PUT --header "Content-Type: application/json" --verbose http://127.0.0.1:10002/foo/bar/baz?token=SECRET
-    curl --verbose http://127.0.0.1:10002/foo/bar/baz?token=SECRET
+```bash
+curl --data "{\"foo\":\"bar\"}" --request PUT --header "Content-Type: application/json" --verbose http://127.0.0.1:10002/foo/bar/baz?token=SECRET
+curl --data "{\"new\":\"bar\"}" --request PUT --header "Content-Type: application/json" --verbose http://127.0.0.1:10002/foo/bar/baz?token=SECRET
+curl --verbose http://127.0.0.1:10002/foo/bar/baz?token=SECRET
 
-    Returns:
-    {
-      "foo": "bar",
-      "new": "bar"
-    }
+# Returns:
+# {
+#   "foo": "bar",
+#   "new": "bar"
+# }
+```
 
 To replace the entire object, use REPLACE or do a DELETE then PUT.
 
