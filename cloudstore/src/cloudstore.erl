@@ -149,8 +149,19 @@ props_to_hprops(Props) ->
 segments_to_hprops(Segments) ->
     lists:append(lists:foldl(fun({expr, star}, R) -> [[] | R]; (Value, R) -> [[list_to_binary(integer_to_list(length(R))), Value] | R] end, [], Segments)).
 
-fire_callbacks(#state{callbacks = Callbacks}) ->
-    io:format("~p~n", [Callbacks]).
+fire_callbacks(#state{callbacks = Callbacks}, Json) ->
+    lists:foreach(fun(Callback) ->
+        spawn(fun() ->
+            {ok, {{200, _}, _, _}} = lhttpc:request(
+                binary_to_list(Callback),
+                "POST",
+                [
+                    {<<"Content-Type">>, <<"application/json">>}
+                ],
+                Json,
+                5000)
+        end)
+    end, Callbacks).
 
 write_json(Req, #state{access = Access, mode = pointer, hash = undefined, path = Path, segments = Segments} = State) when Access =:= <<"rw">> ->
     {ok, Json, Req0} = cowboy_req:body(Req),
@@ -160,7 +171,7 @@ write_json(Req, #state{access = Access, mode = pointer, hash = undefined, path =
     end,
     Q = <<"insert into objects(hash,version,path,value) values (md5($1),0,hstore($2::text[]),hstore($3::text[]))">>,
     {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Path, segments_to_hprops(Segments), props_to_hprops(Props)]),
-    ok = fire_callbacks(State),
+    ok = fire_callbacks(State, Json),
     {true, Req0, State};
 write_json(Req, #state{access = Access, mode = pointer, hash = Hash} = State) when Access =:= <<"rw">> ->
     {ok, Json, Req0} = cowboy_req:body(Req),
@@ -168,7 +179,7 @@ write_json(Req, #state{access = Access, mode = pointer, hash = Hash} = State) wh
     HProps = lists:append([[Name, jiffy:encode(Value)] || {Name, Value} <- Props]),
     Q = <<"update objects set version=version+1,value=value||hstore($2::text[]) where hash=$1">>,
     {ok, _} = cloudstore_pg:equery(cloudstore_pool, Q, [Hash, HProps]),
-    ok = fire_callbacks(State),
+    ok = fire_callbacks(State, Json),
     {true, Req0, State};
 write_json(Req, State) ->
     {ok, Req0} = cowboy_req:reply(403, Req),
