@@ -87,7 +87,7 @@ brew install nodejs
 # see Install Guide for postgres pg_hba.conf issues
 ```
 
-[Install Guide](https://github.com/airships/zephyr/wiki/Install2) for Linux and detailed instructions
+[Install Guide](https://github.com/airships/zephyr/wiki/Install) for Linux and detailed instructions
 
 
 
