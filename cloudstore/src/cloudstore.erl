@@ -22,10 +22,18 @@ init(_Transport, _Req, _Opts) ->
 rest_init(Req, _Opts) ->
     {ok, cloudstore_security:add_cors(Req), #state{}}.
 
-parse_path(<<"/">>) ->
+parse_path(<<>>) ->
     {expr, [{expr, star}]};
 parse_path(Path) ->
-    Segments = [case Segment of "*" -> {expr, star}; _ -> list_to_binary(Segment) end || Segment <- string:tokens(binary_to_list(Path), "/")],
+    PathStr = binary_to_list(Path),
+    Segments =
+        [case Segment of "*" -> {expr, star}; _ -> list_to_binary(Segment) end || Segment <- string:tokens(PathStr, "/")] ++
+        case lists:last(PathStr) of
+            47 ->
+                [{expr, star}];
+            _ ->
+                []
+        end,
     case lists:any(fun ({expr, _}) -> true; (_) -> false end, Segments) of
         true -> {expr, Segments};
         false -> {pointer, Segments}
