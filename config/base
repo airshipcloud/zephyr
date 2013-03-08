@@ -1,4 +1,9 @@
+# By default, CloudStore data API endpoint listens on all interfaces while
+# the token store only listens on localhost for security reasons.
+
+# postgres password for user cf_cloudstore
 CLOUDSTORE_PASSWORD="dhY8AGhJ3Z"
+
 CLOUDSTORE_DOMAIN="localhost"
 
 CLOUDSTORE_PROTOCOL="http"
