@@ -36,6 +36,10 @@ tokens() ->
     {tokens, {cowboy, start_http, Config}, permanent, 5000, supervisor, [dynamic]}.
 
 init([]) ->
+    {ok, Hostname} = application:get_env(cloudstore, db_hostname),
+    {ok, Database} = application:get_env(cloudstore, db_database),
+    {ok, Username} = application:get_env(cloudstore, db_username),
+    {ok, Password} = application:get_env(cloudstore, db_password),
     Pool = poolboy:child_spec(cloudstore_pool,
         [
             {name, {local, cloudstore_pool}},
@@ -44,10 +48,10 @@ init([]) ->
             {max_overflow, 10}
         ],
         [
-            {hostname, "127.0.0.1"},
-            {database, "cf_cloudstore"},
-            {username, "cf_cloudstore"},
-            {password, "dhY8AGhJ3Z"}
+            {hostname, Hostname},
+            {database, Database},
+            {username, Username},
+            {password, Password}
         ]),
         Rest = rest(),
         Tokens = tokens(),

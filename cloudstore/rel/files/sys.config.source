@@ -20,7 +20,11 @@
         {origin, <<"@@CLOUDSTORE_ORIGIN@@">>},
         {port, @@CLOUDSTORE_PORT@@},
         {tokenstore_port, @@TOKENSTORE_PORT@@},
-        {tokenstore_ip, @@TOKENSTORE_IP@@}
+        {tokenstore_ip, @@TOKENSTORE_IP@@},
+        {db_hostname, "127.0.0.1"},
+        {db_database, "cf_cloudstore"},
+        {db_username, "cf_cloudstore"},
+        {db_password, "@@CLOUDSTORE_PASSWORD@@"}
     ]}
 ].
 
