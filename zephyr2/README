@@ -1,0 +1,3 @@
+npm install -g express
+npm install -g stylus
+npm install -g ejs
