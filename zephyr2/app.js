@@ -31,8 +31,10 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.get(/^\/objects\/(\w+)$/, routes.objects);
-app.get(/^\/subs\/(\w+)$/, routes.subs);
+app.get(/^\/objects\/(\w+)$/, routes.getObjects);
+app.put(/^\/objects\/(\w+)$/, routes.putObjects);
+app.get(/^\/subs\/(\w+)$/, routes.getSubs);
+app.put(/^\/subs\/(\w+)$/, routes.putSubs);
 app.get('/users', user.list);
 
 http.createServer(app).listen(app.get('port'), function(){
