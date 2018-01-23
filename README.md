@@ -205,7 +205,7 @@ To replace the entire object, use REPLACE or do a DELETE then PUT.
 
 ## TESTING
 
-API tests are written in Node.js [mocha](http://visionmedia.github.com/mocha/)
+API tests are written in Node.js [mocha](http://mochajs.org/)
 
 ```bash
 # run tests
